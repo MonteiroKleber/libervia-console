@@ -1,4 +1,4 @@
-// Personal Ops - IDL DSL v1.2.3
+// Personal Ops - IDL DSL v1.2.4
 // Governanca de operacoes pessoais de arquivos com approvals para acoes destrutivas.
 // Jobs-First: todas operacoes via job.request/job.get/job.enqueue.
 
@@ -103,6 +103,30 @@ approval_rules {
     trigger: api "POST /personal/jobs/files/move"
     approver_roles: [inst_owner, exec_admin]
     quorum: 1
+  }
+}
+
+// =============================================================================
+// SEPARATION OF DUTIES - Solicitante nao pode aprovar sua propria solicitacao
+// =============================================================================
+
+separation_of_duties {
+  // SoD para delete: quem solicitou NAO pode aprovar
+  rule no_self_approval_job_files_delete {
+    case_step: "APPROVAL:job_files_delete_requires_approval"
+    constraint: REQUESTER_NEQ_DECIDER
+  }
+
+  // SoD para rename: quem solicitou NAO pode aprovar
+  rule no_self_approval_job_files_rename {
+    case_step: "APPROVAL:job_files_rename_requires_approval"
+    constraint: REQUESTER_NEQ_DECIDER
+  }
+
+  // SoD para move: quem solicitou NAO pode aprovar
+  rule no_self_approval_job_files_move {
+    case_step: "APPROVAL:job_files_move_requires_approval"
+    constraint: REQUESTER_NEQ_DECIDER
   }
 }
 

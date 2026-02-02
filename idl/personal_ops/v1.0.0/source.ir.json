@@ -344,8 +344,24 @@
       "on_invariant_violation": "enter"
     }
   },
-  "separation_of_duties": [],
-  "source_idl_sha256": "5d86314d848784a475eef7280c8a0b841fb0308222cb05a3f34fd92a9757f8bd",
+  "separation_of_duties": [
+    {
+      "case_step": "APPROVAL:job_files_delete_requires_approval",
+      "constraint": "REQUESTER_NEQ_DECIDER",
+      "name": "no_self_approval_job_files_delete"
+    },
+    {
+      "case_step": "APPROVAL:job_files_rename_requires_approval",
+      "constraint": "REQUESTER_NEQ_DECIDER",
+      "name": "no_self_approval_job_files_rename"
+    },
+    {
+      "case_step": "APPROVAL:job_files_move_requires_approval",
+      "constraint": "REQUESTER_NEQ_DECIDER",
+      "name": "no_self_approval_job_files_move"
+    }
+  ],
+  "source_idl_sha256": "0fb2634fc7b6daed3170a344e7e042208359777d78c3aa019ebebaa7d233cbe3",
   "source_idl_version": "idl.v1.2.2",
   "system": {
     "contact": "ops@libervia.xyz",

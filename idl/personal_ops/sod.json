@@ -1,5 +1,21 @@
 {
   "name": "sod",
-  "rules": [],
+  "rules": [
+    {
+      "case_step": "APPROVAL:job_files_delete_requires_approval",
+      "constraint": "REQUESTER_NEQ_DECIDER",
+      "rule_name": "no_self_approval_job_files_delete"
+    },
+    {
+      "case_step": "APPROVAL:job_files_move_requires_approval",
+      "constraint": "REQUESTER_NEQ_DECIDER",
+      "rule_name": "no_self_approval_job_files_move"
+    },
+    {
+      "case_step": "APPROVAL:job_files_rename_requires_approval",
+      "constraint": "REQUESTER_NEQ_DECIDER",
+      "rule_name": "no_self_approval_job_files_rename"
+    }
+  ],
   "version": "1.0"
 }
