@@ -2,10 +2,10 @@
   "actors": [
     {
       "auth": "oauth2",
-      "description": "Usuario final. Opera arquivos pessoais com governanca.",
-      "id": "user",
+      "description": "Proprietario da instituicao. Criado no onboarding. Pode operar arquivos e decidir approvals.",
+      "id": "inst_owner",
       "kind": "human",
-      "name": "User",
+      "name": "Institution Owner",
       "permissions": [
         "files.list",
         "files.scan",
@@ -19,30 +19,31 @@
     },
     {
       "auth": "oauth2",
-      "description": "Responsavel institucional. Decide approvals para acoes irreversiveis.",
-      "id": "guardian",
+      "description": "Administrador executivo. Pode decidir approvals para acoes destrutivas.",
+      "id": "exec_admin",
       "kind": "human",
-      "name": "Guardian",
+      "name": "Executive Admin",
       "permissions": [
         "files.list",
         "files.scan",
         "files.suggest",
+        "jobs.get",
         "approval.decide"
       ]
     },
     {
       "auth": "token",
-      "description": "Agente LLM governado que executa operacoes aprovadas.",
-      "id": "agent",
+      "description": "Agente LLM governado que executa operacoes aprovadas via Runtime.",
+      "id": "runtime_agent",
       "kind": "system",
       "name": "Agent Runtime",
       "permissions": [
         "files.list",
         "files.scan",
         "files.suggest",
-        "files.rename.execute",
-        "files.move.execute",
-        "files.delete.execute",
+        "files.rename",
+        "files.move",
+        "files.delete",
         "jobs.get",
         "jobs.enqueue",
         "runtime.bundle.load",
@@ -62,551 +63,11 @@
     "namespace": "personal_ops",
     "tenancy": "multi"
   },
-  "entities": [
-    {
-      "fields": [
-        {
-          "name": "id",
-          "required": true,
-          "type": "uuid",
-          "unique": true
-        },
-        {
-          "indexed": true,
-          "name": "institution_id",
-          "required": true,
-          "type": "uuid"
-        },
-        {
-          "indexed": true,
-          "name": "operation_type",
-          "required": true,
-          "type": "string"
-        },
-        {
-          "name": "source_path",
-          "required": true,
-          "type": "string"
-        },
-        {
-          "name": "target_path",
-          "required": false,
-          "type": "string"
-        },
-        {
-          "name": "file_size",
-          "required": false,
-          "type": "int"
-        },
-        {
-          "name": "file_hash",
-          "required": false,
-          "type": "string"
-        },
-        {
-          "name": "reason",
-          "required": false,
-          "type": "text"
-        },
-        {
-          "indexed": true,
-          "name": "proposed_by",
-          "required": true,
-          "type": "uuid"
-        },
-        {
-          "indexed": true,
-          "name": "proposed_at",
-          "required": true,
-          "type": "datetime"
-        },
-        {
-          "indexed": true,
-          "name": "status",
-          "required": true,
-          "type": "string"
-        },
-        {
-          "indexed": true,
-          "name": "decided_by",
-          "required": false,
-          "type": "uuid"
-        },
-        {
-          "name": "decided_at",
-          "required": false,
-          "type": "datetime"
-        },
-        {
-          "indexed": true,
-          "name": "executed_by",
-          "required": false,
-          "type": "uuid"
-        },
-        {
-          "name": "executed_at",
-          "required": false,
-          "type": "datetime"
-        },
-        {
-          "name": "error_message",
-          "required": false,
-          "type": "text"
-        },
-        {
-          "default": 1,
-          "name": "version",
-          "required": true,
-          "type": "int"
-        }
-      ],
-      "name": "FileOperation",
-      "storage": {
-        "tenant_field": "institution_id",
-        "version_field": "version"
-      }
-    },
-    {
-      "fields": [
-        {
-          "name": "id",
-          "required": true,
-          "type": "uuid",
-          "unique": true
-        },
-        {
-          "indexed": true,
-          "name": "institution_id",
-          "required": true,
-          "type": "uuid"
-        },
-        {
-          "indexed": true,
-          "name": "scan_type",
-          "required": true,
-          "type": "string"
-        },
-        {
-          "indexed": true,
-          "name": "started_at",
-          "required": true,
-          "type": "datetime"
-        },
-        {
-          "name": "finished_at",
-          "required": false,
-          "type": "datetime"
-        },
-        {
-          "name": "total_files",
-          "required": false,
-          "type": "int"
-        },
-        {
-          "name": "total_size",
-          "required": false,
-          "type": "int"
-        },
-        {
-          "name": "duplicates_found",
-          "required": false,
-          "type": "int"
-        },
-        {
-          "name": "cleanup_suggestions",
-          "required": false,
-          "type": "int"
-        },
-        {
-          "indexed": true,
-          "name": "status",
-          "required": true,
-          "type": "string"
-        },
-        {
-          "indexed": true,
-          "name": "created_by",
-          "required": true,
-          "type": "uuid"
-        },
-        {
-          "default": 1,
-          "name": "version",
-          "required": true,
-          "type": "int"
-        }
-      ],
-      "name": "ScanResult",
-      "storage": {
-        "tenant_field": "institution_id",
-        "version_field": "version"
-      }
-    }
-  ],
-  "invariants": [
-    {
-      "applies_to": "FileOperation",
-      "assert": {
-        "kind": "compare",
-        "lhs": {
-          "ref": "FileOperation.source_path",
-          "type": "unknown"
-        },
-        "op": "!=",
-        "rhs": {
-          "lit": "",
-          "type": "string"
-        }
-      },
-      "message": "Operacao deve ter caminho de origem.",
-      "name": "OperationMustHaveSource",
-      "severity": "high",
-      "when": {
-        "kind": "always"
-      }
-    },
-    {
-      "applies_to": "FileOperation",
-      "assert": {
-        "kind": "compare",
-        "lhs": {
-          "ref": "FileOperation.reason",
-          "type": "unknown"
-        },
-        "op": "!=",
-        "rhs": {
-          "lit": "",
-          "type": "string"
-        }
-      },
-      "message": "Operacao de exclusao deve ter justificativa.",
-      "name": "DeleteMustHaveReason",
-      "severity": "high",
-      "when": {
-        "kind": "compare",
-        "lhs": {
-          "ref": "FileOperation.operation_type",
-          "type": "unknown"
-        },
-        "op": "==",
-        "rhs": {
-          "lit": "delete",
-          "type": "string"
-        }
-      }
-    },
-    {
-      "applies_to": "FileOperation",
-      "assert": {
-        "kind": "compare",
-        "lhs": {
-          "ref": "FileOperation.target_path",
-          "type": "unknown"
-        },
-        "op": "!=",
-        "rhs": {
-          "lit": "",
-          "type": "string"
-        }
-      },
-      "message": "Operacao de renomear deve ter novo nome.",
-      "name": "RenameMustHaveTarget",
-      "severity": "high",
-      "when": {
-        "kind": "compare",
-        "lhs": {
-          "ref": "FileOperation.operation_type",
-          "type": "unknown"
-        },
-        "op": "==",
-        "rhs": {
-          "lit": "rename",
-          "type": "string"
-        }
-      }
-    },
-    {
-      "applies_to": "FileOperation",
-      "assert": {
-        "kind": "compare",
-        "lhs": {
-          "ref": "FileOperation.target_path",
-          "type": "unknown"
-        },
-        "op": "!=",
-        "rhs": {
-          "lit": "",
-          "type": "string"
-        }
-      },
-      "message": "Operacao de mover deve ter destino.",
-      "name": "MoveMustHaveTarget",
-      "severity": "high",
-      "when": {
-        "kind": "compare",
-        "lhs": {
-          "ref": "FileOperation.operation_type",
-          "type": "unknown"
-        },
-        "op": "==",
-        "rhs": {
-          "lit": "move",
-          "type": "string"
-        }
-      }
-    }
-  ],
+  "entities": [],
+  "invariants": [],
   "ir_version": "ircs.v1",
   "operations": {
     "api": [
-      {
-        "bind": {
-          "entity": "",
-          "kind": "read"
-        },
-        "errors": [
-          400,
-          401,
-          403
-        ],
-        "id": "files_list",
-        "idempotency": "none",
-        "method": "POST",
-        "path": "/personal/files/list",
-        "path_params": [],
-        "permission": "files.list",
-        "request_type": "any",
-        "response_type": "any",
-        "scope": "tenant"
-      },
-      {
-        "bind": {
-          "entity": "ScanResult",
-          "kind": "create"
-        },
-        "errors": [
-          400,
-          401,
-          403
-        ],
-        "id": "files_scan_duplicates",
-        "idempotency": "required",
-        "method": "POST",
-        "path": "/personal/files/scan/duplicates",
-        "path_params": [],
-        "permission": "files.scan",
-        "request_type": "any",
-        "response_type": "ScanResult",
-        "scope": "tenant"
-      },
-      {
-        "bind": {
-          "entity": "ScanResult",
-          "kind": "create"
-        },
-        "errors": [
-          400,
-          401,
-          403
-        ],
-        "id": "files_suggest_cleanup",
-        "idempotency": "required",
-        "method": "POST",
-        "path": "/personal/files/suggest/cleanup",
-        "path_params": [],
-        "permission": "files.suggest",
-        "request_type": "any",
-        "response_type": "ScanResult",
-        "scope": "tenant"
-      },
-      {
-        "bind": {
-          "entity": "FileOperation",
-          "kind": "create"
-        },
-        "errors": [
-          400,
-          401,
-          403
-        ],
-        "id": "files_rename_propose",
-        "idempotency": "required",
-        "method": "POST",
-        "path": "/personal/files/rename",
-        "path_params": [],
-        "permission": "files.rename",
-        "request_type": "FileOperation",
-        "response_type": "FileOperation",
-        "scope": "tenant"
-      },
-      {
-        "bind": {
-          "entity": "FileOperation",
-          "kind": "transition",
-          "transition": "RequestApproval",
-          "workflow": "FileOperationFlow"
-        },
-        "errors": [
-          400,
-          401,
-          403,
-          404,
-          409
-        ],
-        "id": "files_rename_submit",
-        "idempotency": "required",
-        "method": "POST",
-        "path": "/personal/files/rename/{operation_id}/submit",
-        "path_params": [
-          "operation_id"
-        ],
-        "permission": "files.rename",
-        "request_type": "void",
-        "response_type": "any",
-        "scope": "tenant"
-      },
-      {
-        "bind": {
-          "entity": "FileOperation",
-          "kind": "create"
-        },
-        "errors": [
-          400,
-          401,
-          403
-        ],
-        "id": "files_move_propose",
-        "idempotency": "required",
-        "method": "POST",
-        "path": "/personal/files/move",
-        "path_params": [],
-        "permission": "files.move",
-        "request_type": "FileOperation",
-        "response_type": "FileOperation",
-        "scope": "tenant"
-      },
-      {
-        "bind": {
-          "entity": "FileOperation",
-          "kind": "transition",
-          "transition": "RequestApproval",
-          "workflow": "FileOperationFlow"
-        },
-        "errors": [
-          400,
-          401,
-          403,
-          404,
-          409
-        ],
-        "id": "files_move_submit",
-        "idempotency": "required",
-        "method": "POST",
-        "path": "/personal/files/move/{operation_id}/submit",
-        "path_params": [
-          "operation_id"
-        ],
-        "permission": "files.move",
-        "request_type": "void",
-        "response_type": "any",
-        "scope": "tenant"
-      },
-      {
-        "bind": {
-          "entity": "FileOperation",
-          "kind": "create"
-        },
-        "errors": [
-          400,
-          401,
-          403
-        ],
-        "id": "files_delete_propose",
-        "idempotency": "required",
-        "method": "POST",
-        "path": "/personal/files/delete",
-        "path_params": [],
-        "permission": "files.delete",
-        "request_type": "FileOperation",
-        "response_type": "FileOperation",
-        "scope": "tenant"
-      },
-      {
-        "bind": {
-          "entity": "FileOperation",
-          "kind": "transition",
-          "transition": "RequestApproval",
-          "workflow": "FileOperationFlow"
-        },
-        "errors": [
-          400,
-          401,
-          403,
-          404,
-          409
-        ],
-        "id": "files_delete_submit",
-        "idempotency": "required",
-        "method": "POST",
-        "path": "/personal/files/delete/{operation_id}/submit",
-        "path_params": [
-          "operation_id"
-        ],
-        "permission": "files.delete",
-        "request_type": "void",
-        "response_type": "any",
-        "scope": "tenant"
-      },
-      {
-        "bind": {
-          "entity": "",
-          "kind": "approval"
-        },
-        "errors": [
-          400,
-          401,
-          403,
-          404,
-          409
-        ],
-        "id": "approval_decide",
-        "idempotency": "required",
-        "method": "POST",
-        "path": "/approvals/{approval_id}/decide",
-        "path_params": [
-          "approval_id"
-        ],
-        "permission": "approval.decide",
-        "request_type": "any",
-        "response_type": "any",
-        "scope": "tenant"
-      },
-      {
-        "bind": {
-          "entity": "FileOperation",
-          "kind": "transition",
-          "transition": "Execute",
-          "workflow": "FileOperationFlow"
-        },
-        "errors": [
-          400,
-          401,
-          403,
-          404,
-          409
-        ],
-        "id": "files_operation_execute",
-        "idempotency": "required",
-        "method": "POST",
-        "path": "/personal/files/operations/{operation_id}/execute",
-        "path_params": [
-          "operation_id"
-        ],
-        "permission": "files.rename.execute",
-        "request_type": "void",
-        "response_type": "FileOperation",
-        "scope": "tenant"
-      },
       {
         "bind": {
           "entity": "",
@@ -779,6 +240,30 @@
         "request_type": "void",
         "response_type": "any",
         "scope": "tenant"
+      },
+      {
+        "bind": {
+          "entity": "",
+          "kind": "approval"
+        },
+        "errors": [
+          400,
+          401,
+          403,
+          404,
+          409
+        ],
+        "id": "approval_decide",
+        "idempotency": "required",
+        "method": "POST",
+        "path": "/approvals/{approval_id}/decide",
+        "path_params": [
+          "approval_id"
+        ],
+        "permission": "approval.decide",
+        "request_type": "any",
+        "response_type": "any",
+        "scope": "tenant"
       }
     ]
   },
@@ -824,306 +309,16 @@
       "on_invariant_violation": "enter"
     }
   },
-  "separation_of_duties": [
-    {
-      "forbid": {
-        "action": "Decide",
-        "when": {
-          "kind": "compare",
-          "lhs": {
-            "ref": "actor.id",
-            "type": "unknown"
-          },
-          "op": "==",
-          "rhs": {
-            "ref": "FileOperation.proposed_by",
-            "type": "unknown"
-          }
-        }
-      },
-      "message": "Proponente nao pode aprovar a propria operacao destrutiva.",
-      "name": "ProposerCannotSelfApprove",
-      "on_entity": "FileOperation",
-      "severity": "critical"
-    }
-  ],
-  "source_idl_sha256": "0a17719074d468ff0f84d4f8986d7326d2978f7a1a53ccf3e707a64ed29ebaa4",
+  "separation_of_duties": [],
+  "source_idl_sha256": "96885f9be50953928b32b62ca5435cbae8a1a39fc58c1638a770e6efc9467c5a",
   "source_idl_version": "idl.v1.2.2",
   "system": {
     "contact": "ops@libervia.xyz",
-    "description": "Governanca de operacoes pessoais de arquivos com approvals para acoes destrutivas.",
+    "description": "Governanca de operacoes pessoais de arquivos via Jobs First-Class. Acoes destrutivas requerem approval.",
     "domain": "personal_ops",
     "id": "PersonalOps",
     "name": "Personal Ops",
     "owner": "Libervia"
   },
-  "workflows": [
-    {
-      "name": "FileOperationFlow",
-      "on_entity": "FileOperation",
-      "state_field": "state",
-      "states": [
-        {
-          "initial": true,
-          "name": "Proposed",
-          "terminal": false
-        },
-        {
-          "initial": false,
-          "name": "PendingApproval",
-          "terminal": false
-        },
-        {
-          "initial": false,
-          "name": "Approved",
-          "terminal": false
-        },
-        {
-          "initial": false,
-          "name": "Rejected",
-          "terminal": true
-        },
-        {
-          "initial": false,
-          "name": "Executed",
-          "terminal": true
-        },
-        {
-          "initial": false,
-          "name": "Failed",
-          "terminal": true
-        }
-      ],
-      "transitions": [
-        {
-          "approvals": null,
-          "effects": [
-            {
-              "kind": "set_state",
-              "value": "Approved"
-            },
-            {
-              "kind": "set_field"
-            },
-            {
-              "by": 1,
-              "field": "version",
-              "kind": "bump_version"
-            }
-          ],
-          "from": "Proposed",
-          "guard": {
-            "exprs": [
-              {
-                "kind": "compare",
-                "lhs": {
-                  "ref": "FileOperation.operation_type",
-                  "type": "unknown"
-                },
-                "op": "==",
-                "rhs": {
-                  "lit": "list",
-                  "type": "string"
-                }
-              },
-              {
-                "kind": "compare",
-                "lhs": {
-                  "ref": "FileOperation.operation_type",
-                  "type": "unknown"
-                },
-                "op": "==",
-                "rhs": {
-                  "lit": "scan",
-                  "type": "string"
-                }
-              },
-              {
-                "kind": "compare",
-                "lhs": {
-                  "ref": "FileOperation.operation_type",
-                  "type": "unknown"
-                },
-                "op": "==",
-                "rhs": {
-                  "lit": "suggest",
-                  "type": "string"
-                }
-              }
-            ],
-            "kind": "or"
-          },
-          "name": "AutoApprove",
-          "to": "Approved"
-        },
-        {
-          "approvals": null,
-          "effects": [
-            {
-              "kind": "set_state",
-              "value": "PendingApproval"
-            },
-            {
-              "by": 1,
-              "field": "version",
-              "kind": "bump_version"
-            }
-          ],
-          "from": "Proposed",
-          "guard": {
-            "exprs": [
-              {
-                "kind": "compare",
-                "lhs": {
-                  "ref": "FileOperation.operation_type",
-                  "type": "unknown"
-                },
-                "op": "==",
-                "rhs": {
-                  "lit": "rename",
-                  "type": "string"
-                }
-              },
-              {
-                "kind": "compare",
-                "lhs": {
-                  "ref": "FileOperation.operation_type",
-                  "type": "unknown"
-                },
-                "op": "==",
-                "rhs": {
-                  "lit": "move",
-                  "type": "string"
-                }
-              },
-              {
-                "kind": "compare",
-                "lhs": {
-                  "ref": "FileOperation.operation_type",
-                  "type": "unknown"
-                },
-                "op": "==",
-                "rhs": {
-                  "lit": "delete",
-                  "type": "string"
-                }
-              }
-            ],
-            "kind": "or"
-          },
-          "name": "RequestApproval",
-          "to": "PendingApproval"
-        },
-        {
-          "approvals": {
-            "distinct_actors": true,
-            "expires_in": "24h",
-            "quorum": 1,
-            "roles": [
-              "user",
-              "guardian"
-            ]
-          },
-          "effects": [
-            {
-              "kind": "set_state",
-              "value": "Approved"
-            },
-            {
-              "kind": "set_field"
-            },
-            {
-              "by": 1,
-              "field": "version",
-              "kind": "bump_version"
-            }
-          ],
-          "from": "PendingApproval",
-          "guard": {
-            "lit": true,
-            "type": "bool"
-          },
-          "name": "Approve",
-          "to": "Approved"
-        },
-        {
-          "approvals": {
-            "distinct_actors": true,
-            "expires_in": "24h",
-            "quorum": 1,
-            "roles": [
-              "user",
-              "guardian"
-            ]
-          },
-          "effects": [
-            {
-              "kind": "set_state",
-              "value": "Rejected"
-            },
-            {
-              "kind": "set_field"
-            },
-            {
-              "by": 1,
-              "field": "version",
-              "kind": "bump_version"
-            }
-          ],
-          "from": "PendingApproval",
-          "guard": {
-            "lit": true,
-            "type": "bool"
-          },
-          "name": "Reject",
-          "to": "Rejected"
-        },
-        {
-          "approvals": null,
-          "effects": [
-            {
-              "kind": "set_state",
-              "value": "Executed"
-            },
-            {
-              "kind": "set_field"
-            },
-            {
-              "by": 1,
-              "field": "version",
-              "kind": "bump_version"
-            }
-          ],
-          "from": "Approved",
-          "guard": {
-            "lit": true,
-            "type": "bool"
-          },
-          "name": "Execute",
-          "to": "Executed"
-        },
-        {
-          "approvals": null,
-          "effects": [
-            {
-              "kind": "set_state",
-              "value": "Failed"
-            },
-            {
-              "by": 1,
-              "field": "version",
-              "kind": "bump_version"
-            }
-          ],
-          "from": "Approved",
-          "guard": {
-            "lit": true,
-            "type": "bool"
-          },
-          "name": "MarkFailed",
-          "to": "Failed"
-        }
-      ]
-    }
-  ]
+  "workflows": []
 }

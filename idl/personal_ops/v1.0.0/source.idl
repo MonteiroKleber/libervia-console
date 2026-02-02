@@ -1,10 +1,10 @@
 // Personal Ops - IDL DSL v1.2.2
 // Governanca de operacoes pessoais de arquivos com approvals para acoes destrutivas.
-// MVP: lista, detecta duplicados, sugere limpeza (allow) + renomear, mover, deletar (approval).
+// Jobs-First: todas operacoes via job.request/job.get/job.enqueue.
 
 system PersonalOps {
   name: "Personal Ops"
-  description: "Governanca de operacoes pessoais de arquivos com approvals para acoes destrutivas."
+  description: "Governanca de operacoes pessoais de arquivos via Jobs First-Class. Acoes destrutivas requerem approval."
   version: 1.0.0
   domain: "personal_ops"
   owner: "Libervia"
@@ -12,10 +12,15 @@ system PersonalOps {
   tenancy: multi
 }
 
+// =============================================================================
+// ACTORS - Roles reais usados pelo Console API
+// =============================================================================
+
 actors {
-  human user {
-    name: "User"
-    description: "Usuario final. Opera arquivos pessoais com governanca."
+  // Role "owner" from Console API tokens
+  human inst_owner {
+    name: "Institution Owner"
+    description: "Proprietario da instituicao. Criado no onboarding. Pode operar arquivos e decidir approvals."
     authentication: oauth2
     permissions: [
       files.list,
@@ -29,29 +34,32 @@ actors {
     ]
   }
 
-  human guardian {
-    name: "Guardian"
-    description: "Responsavel institucional. Decide approvals para acoes irreversiveis."
+  // Role "executive_admin" from Console API tokens
+  human exec_admin {
+    name: "Executive Admin"
+    description: "Administrador executivo. Pode decidir approvals para acoes destrutivas."
     authentication: oauth2
     permissions: [
       files.list,
       files.scan,
       files.suggest,
+      jobs.get,
       approval.decide
     ]
   }
 
-  system agent {
+  // Role "agent" from Console API tokens
+  system runtime_agent {
     name: "Agent Runtime"
-    description: "Agente LLM governado que executa operacoes aprovadas."
+    description: "Agente LLM governado que executa operacoes aprovadas via Runtime."
     authentication: token
     permissions: [
       files.list,
       files.scan,
       files.suggest,
-      files.rename.execute,
-      files.move.execute,
-      files.delete.execute,
+      files.rename,
+      files.move,
+      files.delete,
       jobs.get,
       jobs.enqueue,
       runtime.bundle.load,
@@ -61,52 +69,9 @@ actors {
   }
 }
 
-entities {
-  entity FileOperation {
-    storage {
-      tenant_field: institution_id
-      version_field: version
-    }
-
-    field id: uuid required unique
-    field institution_id: uuid required indexed
-    field operation_type: string required indexed
-    field source_path: string required
-    field target_path: string
-    field file_size: int
-    field file_hash: string
-    field reason: text
-    field proposed_by: uuid required indexed
-    field proposed_at: datetime required indexed
-    field status: string required indexed
-    field decided_by: uuid indexed
-    field decided_at: datetime
-    field executed_by: uuid indexed
-    field executed_at: datetime
-    field error_message: text
-    field version: int required default(1)
-  }
-
-  entity ScanResult {
-    storage {
-      tenant_field: institution_id
-      version_field: version
-    }
-
-    field id: uuid required unique
-    field institution_id: uuid required indexed
-    field scan_type: string required indexed
-    field started_at: datetime required indexed
-    field finished_at: datetime
-    field total_files: int
-    field total_size: int
-    field duplicates_found: int
-    field cleanup_suggestions: int
-    field status: string required indexed
-    field created_by: uuid required indexed
-    field version: int required default(1)
-  }
-}
+// =============================================================================
+// POLICY CONTEXT
+// =============================================================================
 
 policy_context {
   field jurisdiction: string required
@@ -114,243 +79,15 @@ policy_context {
   field file_sensitivity: string default("normal")
 }
 
-invariants {
-  invariant OperationMustHaveSource {
-    applies_to: FileOperation
-    when: always
-    assert: FileOperation.source_path != ""
-    severity: high
-    message: "Operacao deve ter caminho de origem."
-  }
-
-  invariant DeleteMustHaveReason {
-    applies_to: FileOperation
-    when: FileOperation.operation_type == "delete"
-    assert: FileOperation.reason != ""
-    severity: high
-    message: "Operacao de exclusao deve ter justificativa."
-  }
-
-  invariant RenameMustHaveTarget {
-    applies_to: FileOperation
-    when: FileOperation.operation_type == "rename"
-    assert: FileOperation.target_path != ""
-    severity: high
-    message: "Operacao de renomear deve ter novo nome."
-  }
-
-  invariant MoveMustHaveTarget {
-    applies_to: FileOperation
-    when: FileOperation.operation_type == "move"
-    assert: FileOperation.target_path != ""
-    severity: high
-    message: "Operacao de mover deve ter destino."
-  }
-}
-
-separation_of_duties {
-  rule ProposerCannotSelfApprove {
-    on: FileOperation
-    forbid: Decide when actor.id == FileOperation.proposed_by
-    severity: critical
-    message: "Proponente nao pode aprovar a propria operacao destrutiva."
-  }
-}
-
-workflows {
-  workflow FileOperationFlow on FileOperation {
-    state Proposed { initial: true }
-    state PendingApproval
-    state Approved
-    state Rejected { terminal: true }
-    state Executed { terminal: true }
-    state Failed { terminal: true }
-
-    // Safe operations: auto-approve
-    transition AutoApprove: Proposed -> Approved {
-      guard: FileOperation.operation_type == "list" or FileOperation.operation_type == "scan" or FileOperation.operation_type == "suggest"
-      effects: [set_state("Approved"), set_field("decided_at", "__NOW__"), bump_version(1)]
-    }
-
-    // Destructive operations: require approval
-    transition RequestApproval: Proposed -> PendingApproval {
-      guard: FileOperation.operation_type == "rename" or FileOperation.operation_type == "move" or FileOperation.operation_type == "delete"
-      effects: [set_state("PendingApproval"), bump_version(1)]
-    }
-
-    transition Approve: PendingApproval -> Approved {
-      guard: true
-      approvals: { quorum: 1 roles: [user, guardian] distinct_actors: true expires_in: 24h }
-      effects: [set_state("Approved"), set_field("decided_at", "__NOW__"), bump_version(1)]
-    }
-
-    transition Reject: PendingApproval -> Rejected {
-      guard: true
-      approvals: { quorum: 1 roles: [user, guardian] distinct_actors: true expires_in: 24h }
-      effects: [set_state("Rejected"), set_field("decided_at", "__NOW__"), bump_version(1)]
-    }
-
-    transition Execute: Approved -> Executed {
-      guard: true
-      effects: [set_state("Executed"), set_field("executed_at", "__NOW__"), bump_version(1)]
-    }
-
-    transition MarkFailed: Approved -> Failed {
-      guard: true
-      effects: [set_state("Failed"), bump_version(1)]
-    }
-  }
-}
+// =============================================================================
+// OPERATIONS - Jobs First-Class Only
+// =============================================================================
 
 operations {
   api {
-    // === SAFE OPERATIONS (allow) ===
-
-    endpoint files_list {
-      method: POST
-      path: "/personal/files/list"
-      request: any
-      response: any
-      permission: files.list
-      scope: tenant
-      idempotency: none
-      errors: [400, 401, 403]
-      bind: { kind: read }
-    }
-
-    endpoint files_scan_duplicates {
-      method: POST
-      path: "/personal/files/scan/duplicates"
-      request: any
-      response: ScanResult
-      permission: files.scan
-      scope: tenant
-      idempotency: required
-      errors: [400, 401, 403]
-      bind: { entity: ScanResult, kind: create }
-    }
-
-    endpoint files_suggest_cleanup {
-      method: POST
-      path: "/personal/files/suggest/cleanup"
-      request: any
-      response: ScanResult
-      permission: files.suggest
-      scope: tenant
-      idempotency: required
-      errors: [400, 401, 403]
-      bind: { entity: ScanResult, kind: create }
-    }
-
-    // === DESTRUCTIVE OPERATIONS (approval required) ===
-
-    endpoint files_rename_propose {
-      method: POST
-      path: "/personal/files/rename"
-      request: FileOperation
-      response: FileOperation
-      permission: files.rename
-      scope: tenant
-      idempotency: required
-      errors: [400, 401, 403]
-      bind: { entity: FileOperation, kind: create }
-    }
-
-    endpoint files_rename_submit {
-      method: POST
-      path: "/personal/files/rename/{operation_id}/submit"
-      request: void
-      response: any
-      permission: files.rename
-      scope: tenant
-      idempotency: required
-      errors: [400, 401, 403, 404, 409]
-      bind: { entity: FileOperation, kind: transition, workflow: FileOperationFlow, transition: RequestApproval }
-    }
-
-    endpoint files_move_propose {
-      method: POST
-      path: "/personal/files/move"
-      request: FileOperation
-      response: FileOperation
-      permission: files.move
-      scope: tenant
-      idempotency: required
-      errors: [400, 401, 403]
-      bind: { entity: FileOperation, kind: create }
-    }
-
-    endpoint files_move_submit {
-      method: POST
-      path: "/personal/files/move/{operation_id}/submit"
-      request: void
-      response: any
-      permission: files.move
-      scope: tenant
-      idempotency: required
-      errors: [400, 401, 403, 404, 409]
-      bind: { entity: FileOperation, kind: transition, workflow: FileOperationFlow, transition: RequestApproval }
-    }
-
-    endpoint files_delete_propose {
-      method: POST
-      path: "/personal/files/delete"
-      request: FileOperation
-      response: FileOperation
-      permission: files.delete
-      scope: tenant
-      idempotency: required
-      errors: [400, 401, 403]
-      bind: { entity: FileOperation, kind: create }
-    }
-
-    endpoint files_delete_submit {
-      method: POST
-      path: "/personal/files/delete/{operation_id}/submit"
-      request: void
-      response: any
-      permission: files.delete
-      scope: tenant
-      idempotency: required
-      errors: [400, 401, 403, 404, 409]
-      bind: { entity: FileOperation, kind: transition, workflow: FileOperationFlow, transition: RequestApproval }
-    }
-
-    // === APPROVAL DECISION ===
-
-    endpoint approval_decide {
-      method: POST
-      path: "/approvals/{approval_id}/decide"
-      request: any
-      response: any
-      permission: approval.decide
-      scope: tenant
-      idempotency: required
-      errors: [400, 401, 403, 404, 409]
-      bind: { kind: approval }
-    }
-
-    // === EXECUTION (by agent after approval) ===
-
-    endpoint files_operation_execute {
-      method: POST
-      path: "/personal/files/operations/{operation_id}/execute"
-      request: void
-      response: FileOperation
-      permission: files.rename.execute
-      scope: tenant
-      idempotency: required
-      errors: [400, 401, 403, 404, 409]
-      bind: { entity: FileOperation, kind: transition, workflow: FileOperationFlow, transition: Execute }
-    }
-
-    // ========================================================================
-    // === JOBS FIRST-CLASS (Console API integration) ===
-    // These endpoints use the job.request/job.get/job.enqueue bind.kinds
-    // for async operation lifecycle management.
-    // ========================================================================
-
-    // --- Safe Jobs (no approval required) ---
+    // =========================================================================
+    // SAFE JOBS (no approval required)
+    // =========================================================================
 
     endpoint job_files_list {
       method: POST
@@ -388,7 +125,10 @@ operations {
       bind: { kind: job.request, job_type: "files.suggest" }
     }
 
-    // --- Destructive Jobs (approval required) ---
+    // =========================================================================
+    // DESTRUCTIVE JOBS (approval required via approvals.json rules)
+    // The job_dispatcher checks approvals.json for rules matching these job_types.
+    // =========================================================================
 
     endpoint job_files_rename {
       method: POST
@@ -426,7 +166,9 @@ operations {
       bind: { kind: job.request, job_type: "files.delete" }
     }
 
-    // --- Job Lifecycle Endpoints ---
+    // =========================================================================
+    // JOB LIFECYCLE
+    // =========================================================================
 
     endpoint job_get {
       method: GET
@@ -450,6 +192,22 @@ operations {
       idempotency: required
       errors: [400, 401, 403, 404, 409]
       bind: { kind: job.enqueue }
+    }
+
+    // =========================================================================
+    // APPROVAL DECISION
+    // =========================================================================
+
+    endpoint approval_decide {
+      method: POST
+      path: "/approvals/{approval_id}/decide"
+      request: any
+      response: any
+      permission: approval.decide
+      scope: tenant
+      idempotency: required
+      errors: [400, 401, 403, 404, 409]
+      bind: { kind: approval }
     }
   }
 }

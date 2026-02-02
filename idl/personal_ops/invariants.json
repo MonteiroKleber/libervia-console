@@ -1,36 +1,4 @@
 {
-  "fileoperation": {
-    "file_hash": {
-      "max_len": 280,
-      "required": false
-    },
-    "operation_type": {
-      "max_len": 280,
-      "required": true
-    },
-    "source_path": {
-      "max_len": 280,
-      "required": true
-    },
-    "status": {
-      "max_len": 280,
-      "required": true
-    },
-    "target_path": {
-      "max_len": 280,
-      "required": false
-    }
-  },
   "name": "invariants",
-  "scanresult": {
-    "scan_type": {
-      "max_len": 280,
-      "required": true
-    },
-    "status": {
-      "max_len": 280,
-      "required": true
-    }
-  },
   "version": "1.0"
 }

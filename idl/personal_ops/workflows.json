@@ -8,131 +8,10 @@
         {
           "action": "approval: post /approvals/{approval_id}/decide",
           "actor_ref": "actor-user",
-          "entity_ref": "entity-fileoperation",
           "step_key": "step-000"
         }
       ],
       "workflow_key": "workflow-approval_decide"
-    },
-    {
-      "name": "files_delete_propose",
-      "steps": [
-        {
-          "action": "create: post /personal/files/delete",
-          "actor_ref": "actor-user",
-          "entity_ref": "entity-fileoperation",
-          "step_key": "step-000"
-        }
-      ],
-      "workflow_key": "workflow-files_delete_propose"
-    },
-    {
-      "name": "files_delete_submit",
-      "steps": [
-        {
-          "action": "transition: post /personal/files/delete/{operation_id}/submit",
-          "actor_ref": "actor-user",
-          "entity_ref": "entity-fileoperation",
-          "step_key": "step-000"
-        }
-      ],
-      "workflow_key": "workflow-files_delete_submit"
-    },
-    {
-      "name": "files_list",
-      "steps": [
-        {
-          "action": "read: post /personal/files/list",
-          "actor_ref": "actor-user",
-          "entity_ref": "entity-fileoperation",
-          "step_key": "step-000"
-        }
-      ],
-      "workflow_key": "workflow-files_list"
-    },
-    {
-      "name": "files_move_propose",
-      "steps": [
-        {
-          "action": "create: post /personal/files/move",
-          "actor_ref": "actor-user",
-          "entity_ref": "entity-fileoperation",
-          "step_key": "step-000"
-        }
-      ],
-      "workflow_key": "workflow-files_move_propose"
-    },
-    {
-      "name": "files_move_submit",
-      "steps": [
-        {
-          "action": "transition: post /personal/files/move/{operation_id}/submit",
-          "actor_ref": "actor-user",
-          "entity_ref": "entity-fileoperation",
-          "step_key": "step-000"
-        }
-      ],
-      "workflow_key": "workflow-files_move_submit"
-    },
-    {
-      "name": "files_operation_execute",
-      "steps": [
-        {
-          "action": "transition: post /personal/files/operations/{operation_id}/execute",
-          "actor_ref": "actor-user",
-          "entity_ref": "entity-fileoperation",
-          "step_key": "step-000"
-        }
-      ],
-      "workflow_key": "workflow-files_operation_execute"
-    },
-    {
-      "name": "files_rename_propose",
-      "steps": [
-        {
-          "action": "create: post /personal/files/rename",
-          "actor_ref": "actor-user",
-          "entity_ref": "entity-fileoperation",
-          "step_key": "step-000"
-        }
-      ],
-      "workflow_key": "workflow-files_rename_propose"
-    },
-    {
-      "name": "files_rename_submit",
-      "steps": [
-        {
-          "action": "transition: post /personal/files/rename/{operation_id}/submit",
-          "actor_ref": "actor-user",
-          "entity_ref": "entity-fileoperation",
-          "step_key": "step-000"
-        }
-      ],
-      "workflow_key": "workflow-files_rename_submit"
-    },
-    {
-      "name": "files_scan_duplicates",
-      "steps": [
-        {
-          "action": "create: post /personal/files/scan/duplicates",
-          "actor_ref": "actor-user",
-          "entity_ref": "entity-fileoperation",
-          "step_key": "step-000"
-        }
-      ],
-      "workflow_key": "workflow-files_scan_duplicates"
-    },
-    {
-      "name": "files_suggest_cleanup",
-      "steps": [
-        {
-          "action": "create: post /personal/files/suggest/cleanup",
-          "actor_ref": "actor-user",
-          "entity_ref": "entity-fileoperation",
-          "step_key": "step-000"
-        }
-      ],
-      "workflow_key": "workflow-files_suggest_cleanup"
     },
     {
       "name": "job_enqueue",
@@ -140,7 +19,6 @@
         {
           "action": "job.enqueue: post /personal/jobs/{job_id}/enqueue",
           "actor_ref": "actor-user",
-          "entity_ref": "entity-fileoperation",
           "step_key": "step-000"
         }
       ],
@@ -152,7 +30,6 @@
         {
           "action": "job.request: post /personal/jobs/files/delete",
           "actor_ref": "actor-user",
-          "entity_ref": "entity-fileoperation",
           "step_key": "step-000"
         }
       ],
@@ -164,7 +41,6 @@
         {
           "action": "job.request: post /personal/jobs/files/list",
           "actor_ref": "actor-user",
-          "entity_ref": "entity-fileoperation",
           "step_key": "step-000"
         }
       ],
@@ -176,7 +52,6 @@
         {
           "action": "job.request: post /personal/jobs/files/move",
           "actor_ref": "actor-user",
-          "entity_ref": "entity-fileoperation",
           "step_key": "step-000"
         }
       ],
@@ -188,7 +63,6 @@
         {
           "action": "job.request: post /personal/jobs/files/rename",
           "actor_ref": "actor-user",
-          "entity_ref": "entity-fileoperation",
           "step_key": "step-000"
         }
       ],
@@ -200,7 +74,6 @@
         {
           "action": "job.request: post /personal/jobs/files/scan",
           "actor_ref": "actor-user",
-          "entity_ref": "entity-fileoperation",
           "step_key": "step-000"
         }
       ],
@@ -212,7 +85,6 @@
         {
           "action": "job.request: post /personal/jobs/files/suggest",
           "actor_ref": "actor-user",
-          "entity_ref": "entity-fileoperation",
           "step_key": "step-000"
         }
       ],
@@ -224,7 +96,6 @@
         {
           "action": "job.get: get /personal/jobs/{job_id}",
           "actor_ref": "actor-user",
-          "entity_ref": "entity-fileoperation",
           "step_key": "step-000"
         }
       ],

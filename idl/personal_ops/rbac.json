@@ -2,32 +2,17 @@
   "name": "rbac",
   "roles": [
     {
-      "name": "agent",
-      "permissions": [
-        "files.delete.execute",
-        "files.list",
-        "files.move.execute",
-        "files.rename.execute",
-        "files.scan",
-        "files.suggest",
-        "jobs.enqueue",
-        "jobs.get",
-        "runtime.bundle.load",
-        "runtime.proof.snapshot",
-        "runtime.safe_mode.enter"
-      ]
-    },
-    {
-      "name": "guardian",
+      "name": "exec_admin",
       "permissions": [
         "approval.decide",
         "files.list",
         "files.scan",
-        "files.suggest"
+        "files.suggest",
+        "jobs.get"
       ]
     },
     {
-      "name": "user",
+      "name": "inst_owner",
       "permissions": [
         "approval.decide",
         "files.delete",
@@ -37,6 +22,22 @@
         "files.scan",
         "files.suggest",
         "jobs.get"
+      ]
+    },
+    {
+      "name": "runtime_agent",
+      "permissions": [
+        "files.delete",
+        "files.list",
+        "files.move",
+        "files.rename",
+        "files.scan",
+        "files.suggest",
+        "jobs.enqueue",
+        "jobs.get",
+        "runtime.bundle.load",
+        "runtime.proof.snapshot",
+        "runtime.safe_mode.enter"
       ]
     }
   ],
