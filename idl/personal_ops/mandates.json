@@ -1,0 +1,171 @@
+{
+  "mandate_schema_version": "1.0",
+  "mandates": [
+    {
+      "allowed_roles": [
+        "agent",
+        "guardian",
+        "user"
+      ],
+      "endpoint_sig": "POST /personal/files/list",
+      "mandate_id": "files_list:pre",
+      "phase": "pre"
+    },
+    {
+      "allowed_roles": [
+        "agent",
+        "guardian",
+        "user"
+      ],
+      "endpoint_sig": "POST /personal/files/scan/duplicates",
+      "mandate_id": "files_scan_duplicates:pre",
+      "phase": "pre"
+    },
+    {
+      "allowed_roles": [
+        "agent",
+        "guardian",
+        "user"
+      ],
+      "endpoint_sig": "POST /personal/files/suggest/cleanup",
+      "mandate_id": "files_suggest_cleanup:pre",
+      "phase": "pre"
+    },
+    {
+      "allowed_roles": [
+        "user"
+      ],
+      "endpoint_sig": "POST /personal/files/rename",
+      "mandate_id": "files_rename_propose:pre",
+      "phase": "pre"
+    },
+    {
+      "allowed_roles": [
+        "user"
+      ],
+      "endpoint_sig": "POST /personal/files/rename/{operation_id}/submit",
+      "mandate_id": "files_rename_submit:pre",
+      "phase": "pre"
+    },
+    {
+      "allowed_roles": [
+        "user"
+      ],
+      "endpoint_sig": "POST /personal/files/move",
+      "mandate_id": "files_move_propose:pre",
+      "phase": "pre"
+    },
+    {
+      "allowed_roles": [
+        "user"
+      ],
+      "endpoint_sig": "POST /personal/files/move/{operation_id}/submit",
+      "mandate_id": "files_move_submit:pre",
+      "phase": "pre"
+    },
+    {
+      "allowed_roles": [
+        "user"
+      ],
+      "endpoint_sig": "POST /personal/files/delete",
+      "mandate_id": "files_delete_propose:pre",
+      "phase": "pre"
+    },
+    {
+      "allowed_roles": [
+        "user"
+      ],
+      "endpoint_sig": "POST /personal/files/delete/{operation_id}/submit",
+      "mandate_id": "files_delete_submit:pre",
+      "phase": "pre"
+    },
+    {
+      "allowed_roles": [
+        "guardian",
+        "user"
+      ],
+      "endpoint_sig": "POST /approvals/{approval_id}/decide",
+      "mandate_id": "approval_decide:post",
+      "phase": "post"
+    },
+    {
+      "allowed_roles": [
+        "agent"
+      ],
+      "endpoint_sig": "POST /personal/files/operations/{operation_id}/execute",
+      "mandate_id": "files_operation_execute:pre",
+      "phase": "pre"
+    },
+    {
+      "allowed_roles": [
+        "agent",
+        "guardian",
+        "user"
+      ],
+      "endpoint_sig": "POST /personal/jobs/files/list",
+      "mandate_id": "job_files_list:pre",
+      "phase": "pre"
+    },
+    {
+      "allowed_roles": [
+        "agent",
+        "guardian",
+        "user"
+      ],
+      "endpoint_sig": "POST /personal/jobs/files/scan",
+      "mandate_id": "job_files_scan:pre",
+      "phase": "pre"
+    },
+    {
+      "allowed_roles": [
+        "agent",
+        "guardian",
+        "user"
+      ],
+      "endpoint_sig": "POST /personal/jobs/files/suggest",
+      "mandate_id": "job_files_suggest:pre",
+      "phase": "pre"
+    },
+    {
+      "allowed_roles": [
+        "user"
+      ],
+      "endpoint_sig": "POST /personal/jobs/files/rename",
+      "mandate_id": "job_files_rename:pre",
+      "phase": "pre"
+    },
+    {
+      "allowed_roles": [
+        "user"
+      ],
+      "endpoint_sig": "POST /personal/jobs/files/move",
+      "mandate_id": "job_files_move:pre",
+      "phase": "pre"
+    },
+    {
+      "allowed_roles": [
+        "user"
+      ],
+      "endpoint_sig": "POST /personal/jobs/files/delete",
+      "mandate_id": "job_files_delete:pre",
+      "phase": "pre"
+    },
+    {
+      "allowed_roles": [
+        "agent",
+        "user"
+      ],
+      "endpoint_sig": "GET /personal/jobs/{job_id}",
+      "mandate_id": "job_get:pre",
+      "phase": "pre"
+    },
+    {
+      "allowed_roles": [
+        "agent"
+      ],
+      "endpoint_sig": "POST /personal/jobs/{job_id}/enqueue",
+      "mandate_id": "job_enqueue:pre",
+      "phase": "pre"
+    }
+  ]
+}

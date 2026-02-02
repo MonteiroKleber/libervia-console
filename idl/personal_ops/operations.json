@@ -1,0 +1,550 @@
+{
+  "operations": [
+    {
+      "bind": {
+        "kind": "job.get"
+      },
+      "endpoint_sig": "GET /personal/jobs/{job_id}",
+      "errors": [
+        400,
+        401,
+        403,
+        404
+      ],
+      "idempotency": "none",
+      "method": "GET",
+      "operation_id": "job_get",
+      "path": "/personal/jobs/{job_id}",
+      "permission": "jobs.get",
+      "scope": "tenant"
+    },
+    {
+      "bind": {
+        "entity": "",
+        "kind": "approval"
+      },
+      "endpoint_sig": "POST /approvals/{approval_id}/decide",
+      "errors": [
+        400,
+        401,
+        403,
+        404,
+        409
+      ],
+      "idempotency": "required",
+      "method": "POST",
+      "operation_id": "approval_decide",
+      "path": "/approvals/{approval_id}/decide",
+      "permission": "approval.decide",
+      "scope": "tenant"
+    },
+    {
+      "bind": {
+        "entity": "FileOperation",
+        "kind": "create"
+      },
+      "endpoint_sig": "POST /personal/files/delete",
+      "errors": [
+        400,
+        401,
+        403
+      ],
+      "idempotency": "required",
+      "method": "POST",
+      "operation_id": "files_delete_propose",
+      "path": "/personal/files/delete",
+      "permission": "files.delete",
+      "scope": "tenant"
+    },
+    {
+      "bind": {
+        "entity": "FileOperation",
+        "kind": "transition",
+        "transition": "RequestApproval",
+        "transition_def": {
+          "approvals": null,
+          "effects": [
+            {
+              "type": "set_state",
+              "value": "PENDINGAPPROVAL"
+            },
+            {
+              "type": "bump_version",
+              "value": 1
+            }
+          ],
+          "from": "PROPOSED",
+          "guard": {
+            "exprs": [
+              {
+                "kind": "compare",
+                "lhs": {
+                  "ref": "FileOperation.operation_type",
+                  "type": "unknown"
+                },
+                "op": "==",
+                "rhs": {
+                  "lit": "rename",
+                  "type": "string"
+                }
+              },
+              {
+                "kind": "compare",
+                "lhs": {
+                  "ref": "FileOperation.operation_type",
+                  "type": "unknown"
+                },
+                "op": "==",
+                "rhs": {
+                  "lit": "move",
+                  "type": "string"
+                }
+              },
+              {
+                "kind": "compare",
+                "lhs": {
+                  "ref": "FileOperation.operation_type",
+                  "type": "unknown"
+                },
+                "op": "==",
+                "rhs": {
+                  "lit": "delete",
+                  "type": "string"
+                }
+              }
+            ],
+            "kind": "or"
+          },
+          "to": "PENDINGAPPROVAL"
+        },
+        "workflow": "FileOperationFlow"
+      },
+      "endpoint_sig": "POST /personal/files/delete/{operation_id}/submit",
+      "errors": [
+        400,
+        401,
+        403,
+        404,
+        409
+      ],
+      "idempotency": "required",
+      "method": "POST",
+      "operation_id": "files_delete_submit",
+      "path": "/personal/files/delete/{operation_id}/submit",
+      "permission": "files.delete",
+      "scope": "tenant"
+    },
+    {
+      "bind": {
+        "entity": "",
+        "kind": "read"
+      },
+      "endpoint_sig": "POST /personal/files/list",
+      "errors": [
+        400,
+        401,
+        403
+      ],
+      "idempotency": "none",
+      "method": "POST",
+      "operation_id": "files_list",
+      "path": "/personal/files/list",
+      "permission": "files.list",
+      "scope": "tenant"
+    },
+    {
+      "bind": {
+        "entity": "FileOperation",
+        "kind": "create"
+      },
+      "endpoint_sig": "POST /personal/files/move",
+      "errors": [
+        400,
+        401,
+        403
+      ],
+      "idempotency": "required",
+      "method": "POST",
+      "operation_id": "files_move_propose",
+      "path": "/personal/files/move",
+      "permission": "files.move",
+      "scope": "tenant"
+    },
+    {
+      "bind": {
+        "entity": "FileOperation",
+        "kind": "transition",
+        "transition": "RequestApproval",
+        "transition_def": {
+          "approvals": null,
+          "effects": [
+            {
+              "type": "set_state",
+              "value": "PENDINGAPPROVAL"
+            },
+            {
+              "type": "bump_version",
+              "value": 1
+            }
+          ],
+          "from": "PROPOSED",
+          "guard": {
+            "exprs": [
+              {
+                "kind": "compare",
+                "lhs": {
+                  "ref": "FileOperation.operation_type",
+                  "type": "unknown"
+                },
+                "op": "==",
+                "rhs": {
+                  "lit": "rename",
+                  "type": "string"
+                }
+              },
+              {
+                "kind": "compare",
+                "lhs": {
+                  "ref": "FileOperation.operation_type",
+                  "type": "unknown"
+                },
+                "op": "==",
+                "rhs": {
+                  "lit": "move",
+                  "type": "string"
+                }
+              },
+              {
+                "kind": "compare",
+                "lhs": {
+                  "ref": "FileOperation.operation_type",
+                  "type": "unknown"
+                },
+                "op": "==",
+                "rhs": {
+                  "lit": "delete",
+                  "type": "string"
+                }
+              }
+            ],
+            "kind": "or"
+          },
+          "to": "PENDINGAPPROVAL"
+        },
+        "workflow": "FileOperationFlow"
+      },
+      "endpoint_sig": "POST /personal/files/move/{operation_id}/submit",
+      "errors": [
+        400,
+        401,
+        403,
+        404,
+        409
+      ],
+      "idempotency": "required",
+      "method": "POST",
+      "operation_id": "files_move_submit",
+      "path": "/personal/files/move/{operation_id}/submit",
+      "permission": "files.move",
+      "scope": "tenant"
+    },
+    {
+      "bind": {
+        "entity": "FileOperation",
+        "kind": "transition",
+        "transition": "Execute",
+        "transition_def": {
+          "approvals": null,
+          "effects": [
+            {
+              "type": "set_state",
+              "value": "EXECUTED"
+            },
+            {
+              "type": "bump_version",
+              "value": 1
+            }
+          ],
+          "from": "APPROVED",
+          "guard": true,
+          "to": "EXECUTED"
+        },
+        "workflow": "FileOperationFlow"
+      },
+      "endpoint_sig": "POST /personal/files/operations/{operation_id}/execute",
+      "errors": [
+        400,
+        401,
+        403,
+        404,
+        409
+      ],
+      "idempotency": "required",
+      "method": "POST",
+      "operation_id": "files_operation_execute",
+      "path": "/personal/files/operations/{operation_id}/execute",
+      "permission": "files.rename.execute",
+      "scope": "tenant"
+    },
+    {
+      "bind": {
+        "entity": "FileOperation",
+        "kind": "create"
+      },
+      "endpoint_sig": "POST /personal/files/rename",
+      "errors": [
+        400,
+        401,
+        403
+      ],
+      "idempotency": "required",
+      "method": "POST",
+      "operation_id": "files_rename_propose",
+      "path": "/personal/files/rename",
+      "permission": "files.rename",
+      "scope": "tenant"
+    },
+    {
+      "bind": {
+        "entity": "FileOperation",
+        "kind": "transition",
+        "transition": "RequestApproval",
+        "transition_def": {
+          "approvals": null,
+          "effects": [
+            {
+              "type": "set_state",
+              "value": "PENDINGAPPROVAL"
+            },
+            {
+              "type": "bump_version",
+              "value": 1
+            }
+          ],
+          "from": "PROPOSED",
+          "guard": {
+            "exprs": [
+              {
+                "kind": "compare",
+                "lhs": {
+                  "ref": "FileOperation.operation_type",
+                  "type": "unknown"
+                },
+                "op": "==",
+                "rhs": {
+                  "lit": "rename",
+                  "type": "string"
+                }
+              },
+              {
+                "kind": "compare",
+                "lhs": {
+                  "ref": "FileOperation.operation_type",
+                  "type": "unknown"
+                },
+                "op": "==",
+                "rhs": {
+                  "lit": "move",
+                  "type": "string"
+                }
+              },
+              {
+                "kind": "compare",
+                "lhs": {
+                  "ref": "FileOperation.operation_type",
+                  "type": "unknown"
+                },
+                "op": "==",
+                "rhs": {
+                  "lit": "delete",
+                  "type": "string"
+                }
+              }
+            ],
+            "kind": "or"
+          },
+          "to": "PENDINGAPPROVAL"
+        },
+        "workflow": "FileOperationFlow"
+      },
+      "endpoint_sig": "POST /personal/files/rename/{operation_id}/submit",
+      "errors": [
+        400,
+        401,
+        403,
+        404,
+        409
+      ],
+      "idempotency": "required",
+      "method": "POST",
+      "operation_id": "files_rename_submit",
+      "path": "/personal/files/rename/{operation_id}/submit",
+      "permission": "files.rename",
+      "scope": "tenant"
+    },
+    {
+      "bind": {
+        "entity": "ScanResult",
+        "kind": "create"
+      },
+      "endpoint_sig": "POST /personal/files/scan/duplicates",
+      "errors": [
+        400,
+        401,
+        403
+      ],
+      "idempotency": "required",
+      "method": "POST",
+      "operation_id": "files_scan_duplicates",
+      "path": "/personal/files/scan/duplicates",
+      "permission": "files.scan",
+      "scope": "tenant"
+    },
+    {
+      "bind": {
+        "entity": "ScanResult",
+        "kind": "create"
+      },
+      "endpoint_sig": "POST /personal/files/suggest/cleanup",
+      "errors": [
+        400,
+        401,
+        403
+      ],
+      "idempotency": "required",
+      "method": "POST",
+      "operation_id": "files_suggest_cleanup",
+      "path": "/personal/files/suggest/cleanup",
+      "permission": "files.suggest",
+      "scope": "tenant"
+    },
+    {
+      "bind": {
+        "job_type": "files.delete",
+        "kind": "job.request"
+      },
+      "endpoint_sig": "POST /personal/jobs/files/delete",
+      "errors": [
+        400,
+        401,
+        403
+      ],
+      "idempotency": "none",
+      "method": "POST",
+      "operation_id": "job_files_delete",
+      "path": "/personal/jobs/files/delete",
+      "permission": "files.delete",
+      "scope": "tenant"
+    },
+    {
+      "bind": {
+        "job_type": "files.list",
+        "kind": "job.request"
+      },
+      "endpoint_sig": "POST /personal/jobs/files/list",
+      "errors": [
+        400,
+        401,
+        403
+      ],
+      "idempotency": "none",
+      "method": "POST",
+      "operation_id": "job_files_list",
+      "path": "/personal/jobs/files/list",
+      "permission": "files.list",
+      "scope": "tenant"
+    },
+    {
+      "bind": {
+        "job_type": "files.move",
+        "kind": "job.request"
+      },
+      "endpoint_sig": "POST /personal/jobs/files/move",
+      "errors": [
+        400,
+        401,
+        403
+      ],
+      "idempotency": "none",
+      "method": "POST",
+      "operation_id": "job_files_move",
+      "path": "/personal/jobs/files/move",
+      "permission": "files.move",
+      "scope": "tenant"
+    },
+    {
+      "bind": {
+        "job_type": "files.rename",
+        "kind": "job.request"
+      },
+      "endpoint_sig": "POST /personal/jobs/files/rename",
+      "errors": [
+        400,
+        401,
+        403
+      ],
+      "idempotency": "none",
+      "method": "POST",
+      "operation_id": "job_files_rename",
+      "path": "/personal/jobs/files/rename",
+      "permission": "files.rename",
+      "scope": "tenant"
+    },
+    {
+      "bind": {
+        "job_type": "files.scan",
+        "kind": "job.request"
+      },
+      "endpoint_sig": "POST /personal/jobs/files/scan",
+      "errors": [
+        400,
+        401,
+        403
+      ],
+      "idempotency": "none",
+      "method": "POST",
+      "operation_id": "job_files_scan",
+      "path": "/personal/jobs/files/scan",
+      "permission": "files.scan",
+      "scope": "tenant"
+    },
+    {
+      "bind": {
+        "job_type": "files.suggest",
+        "kind": "job.request"
+      },
+      "endpoint_sig": "POST /personal/jobs/files/suggest",
+      "errors": [
+        400,
+        401,
+        403
+      ],
+      "idempotency": "none",
+      "method": "POST",
+      "operation_id": "job_files_suggest",
+      "path": "/personal/jobs/files/suggest",
+      "permission": "files.suggest",
+      "scope": "tenant"
+    },
+    {
+      "bind": {
+        "kind": "job.enqueue"
+      },
+      "endpoint_sig": "POST /personal/jobs/{job_id}/enqueue",
+      "errors": [
+        400,
+        401,
+        403,
+        404,
+        409
+      ],
+      "idempotency": "required",
+      "method": "POST",
+      "operation_id": "job_enqueue",
+      "path": "/personal/jobs/{job_id}/enqueue",
+      "permission": "jobs.enqueue",
+      "scope": "tenant"
+    }
+  ],
+  "operations_schema_version": "1.0"
+}

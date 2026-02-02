@@ -1,0 +1,120 @@
+{
+  "autonomy_schema_version": "1.0",
+  "current_level": 0,
+  "rules": [
+    {
+      "endpoint_sig": "POST /personal/files/list",
+      "phase": "pre",
+      "required_level": 0,
+      "rule_id": "files_list:pre"
+    },
+    {
+      "endpoint_sig": "POST /personal/files/scan/duplicates",
+      "phase": "pre",
+      "required_level": 0,
+      "rule_id": "files_scan_duplicates:pre"
+    },
+    {
+      "endpoint_sig": "POST /personal/files/suggest/cleanup",
+      "phase": "pre",
+      "required_level": 0,
+      "rule_id": "files_suggest_cleanup:pre"
+    },
+    {
+      "endpoint_sig": "POST /personal/files/rename",
+      "phase": "pre",
+      "required_level": 0,
+      "rule_id": "files_rename_propose:pre"
+    },
+    {
+      "endpoint_sig": "POST /personal/files/rename/{operation_id}/submit",
+      "phase": "pre",
+      "required_level": 0,
+      "rule_id": "files_rename_submit:pre"
+    },
+    {
+      "endpoint_sig": "POST /personal/files/move",
+      "phase": "pre",
+      "required_level": 0,
+      "rule_id": "files_move_propose:pre"
+    },
+    {
+      "endpoint_sig": "POST /personal/files/move/{operation_id}/submit",
+      "phase": "pre",
+      "required_level": 0,
+      "rule_id": "files_move_submit:pre"
+    },
+    {
+      "endpoint_sig": "POST /personal/files/delete",
+      "phase": "pre",
+      "required_level": 0,
+      "rule_id": "files_delete_propose:pre"
+    },
+    {
+      "endpoint_sig": "POST /personal/files/delete/{operation_id}/submit",
+      "phase": "pre",
+      "required_level": 0,
+      "rule_id": "files_delete_submit:pre"
+    },
+    {
+      "endpoint_sig": "POST /approvals/{approval_id}/decide",
+      "phase": "post",
+      "required_level": 0,
+      "rule_id": "approval_decide:post"
+    },
+    {
+      "endpoint_sig": "POST /personal/files/operations/{operation_id}/execute",
+      "phase": "pre",
+      "required_level": 0,
+      "rule_id": "files_operation_execute:pre"
+    },
+    {
+      "endpoint_sig": "POST /personal/jobs/files/list",
+      "phase": "pre",
+      "required_level": 0,
+      "rule_id": "job_files_list:pre"
+    },
+    {
+      "endpoint_sig": "POST /personal/jobs/files/scan",
+      "phase": "pre",
+      "required_level": 0,
+      "rule_id": "job_files_scan:pre"
+    },
+    {
+      "endpoint_sig": "POST /personal/jobs/files/suggest",
+      "phase": "pre",
+      "required_level": 0,
+      "rule_id": "job_files_suggest:pre"
+    },
+    {
+      "endpoint_sig": "POST /personal/jobs/files/rename",
+      "phase": "pre",
+      "required_level": 0,
+      "rule_id": "job_files_rename:pre"
+    },
+    {
+      "endpoint_sig": "POST /personal/jobs/files/move",
+      "phase": "pre",
+      "required_level": 0,
+      "rule_id": "job_files_move:pre"
+    },
+    {
+      "endpoint_sig": "POST /personal/jobs/files/delete",
+      "phase": "pre",
+      "required_level": 0,
+      "rule_id": "job_files_delete:pre"
+    },
+    {
+      "endpoint_sig": "GET /personal/jobs/{job_id}",
+      "phase": "pre",
+      "required_level": 0,
+      "rule_id": "job_get:pre"
+    },
+    {
+      "endpoint_sig": "POST /personal/jobs/{job_id}/enqueue",
+      "phase": "pre",
+      "required_level": 0,
+      "rule_id": "job_enqueue:pre"
+    }
+  ]
+}

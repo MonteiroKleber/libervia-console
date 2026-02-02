@@ -1,0 +1,64 @@
+{
+  "_metadata": {
+    "bundle_hash": "f6fb6092a1197f04da9ef2756c58341c7903edff4b252a0736d2ea489f83f5aa",
+    "created_at": "2026-02-02T16:49:12.859266+00:00",
+    "manifest_version": "1.0",
+    "mode": "single",
+    "system_name": "Personal Ops"
+  },
+  "contracts": [
+    {
+      "file": "approvals.json",
+      "required": true,
+      "sha256": "SHA256:b17a4c5ea1851f9210faaa69391d48001453f1ae6523680e6e011dd17492b24e"
+    },
+    {
+      "file": "autonomy.json",
+      "required": true,
+      "sha256": "SHA256:19b473fee8fd90894bce0c4984dd708a19976e4a9e372c2b9fb8e73fc4dcc281"
+    },
+    {
+      "file": "invariants.json",
+      "required": true,
+      "sha256": "SHA256:f6fb681d3e883b744ef1fdee7ed644200f609c0b32663d0737197ffe95f46f63"
+    },
+    {
+      "file": "mandates.json",
+      "required": true,
+      "sha256": "SHA256:7085e481f47eb505b8d723c0d7e44defa7389c53763d0de65ad15d0ccecc033d"
+    },
+    {
+      "file": "openapi.yaml",
+      "required": false,
+      "sha256": "SHA256:c169aa76e1ed32627ce36681eb2f365c70c23f9c3eb0a5cf63ff71866e43ab6d"
+    },
+    {
+      "file": "operations.json",
+      "required": false,
+      "sha256": "SHA256:c09d2eeddf88deb769d92142f6c3ba4900f79f3d8a2bf9646dd81a998ceade65"
+    },
+    {
+      "file": "policies.json",
+      "required": true,
+      "sha256": "SHA256:d6c07203f38893484deae5e433ad25e5d880ef478460a957fbe810b6ea402654"
+    },
+    {
+      "file": "rbac.json",
+      "required": true,
+      "sha256": "SHA256:99df6cda023e2aaac5ea41e50c40edaebaa20e43716b840140004089f92223bd"
+    },
+    {
+      "file": "sod.json",
+      "required": true,
+      "sha256": "SHA256:7861a3f90c8bfb0e0d1acd96de0ba7da05e4cf47293d5be107f3ea1458652a1d"
+    },
+    {
+      "file": "workflows.json",
+      "required": true,
+      "sha256": "SHA256:9aa455cb3f702fa975967031ffbb0288dd0c845d378c1649c1e6d95559b03e1a"
+    }
+  ],
+  "description": "Personal Ops bundle",
+  "name": "personal-ops",
+  "version": "idl.v1.2.2"
+}

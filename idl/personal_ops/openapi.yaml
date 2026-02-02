@@ -1,0 +1,167 @@
+components:
+  schemas:
+    FileOperation:
+      properties:
+        decided_at:
+          type: string
+        decided_by:
+          type: string
+        error_message:
+          type: string
+        executed_at:
+          type: string
+        executed_by:
+          type: string
+        file_hash:
+          type: string
+        file_size:
+          type: string
+        id:
+          type: string
+        institution_id:
+          type: string
+        operation_type:
+          type: string
+        proposed_at:
+          type: string
+        proposed_by:
+          type: string
+        reason:
+          type: string
+        source_path:
+          type: string
+        status:
+          type: string
+        target_path:
+          type: string
+        version:
+          type: string
+      required:
+      - id
+      - institution_id
+      - operation_type
+      - source_path
+      - proposed_by
+      - proposed_at
+      - status
+      - version
+      type: object
+    ScanResult:
+      properties:
+        cleanup_suggestions:
+          type: string
+        created_by:
+          type: string
+        duplicates_found:
+          type: string
+        finished_at:
+          type: string
+        id:
+          type: string
+        institution_id:
+          type: string
+        scan_type:
+          type: string
+        started_at:
+          type: string
+        status:
+          type: string
+        total_files:
+          type: string
+        total_size:
+          type: string
+        version:
+          type: string
+      required:
+      - id
+      - institution_id
+      - scan_type
+      - started_at
+      - status
+      - created_by
+      - version
+      type: object
+  securitySchemes:
+    ActorHeader:
+      in: header
+      name: X-Actor-Id
+      type: apiKey
+info:
+  title: Personal Ops API
+  version: idl.v1.2.2
+openapi: 3.0.3
+paths:
+  /finance/fileoperations:
+    post:
+      operationId: create_fileoperation
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FileOperation'
+        required: true
+      responses:
+        '202':
+          content:
+            application/json:
+              schema:
+                properties:
+                  approval_id:
+                    type: string
+                  fileoperation_id:
+                    type: string
+                  status:
+                    type: string
+                type: object
+          description: Created (pending approval)
+        '422':
+          description: Validation error
+      summary: Create FileOperation
+      tags:
+      - finance
+  /finance/scanresults:
+    post:
+      operationId: create_scanresult
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ScanResult'
+        required: true
+      responses:
+        '202':
+          content:
+            application/json:
+              schema:
+                properties:
+                  approval_id:
+                    type: string
+                  scanresult_id:
+                    type: string
+                  status:
+                    type: string
+                type: object
+          description: Created (pending approval)
+        '422':
+          description: Validation error
+      summary: Create ScanResult
+      tags:
+      - finance
+  /health:
+    get:
+      operationId: health_check
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  mode:
+                    type: string
+                  status:
+                    type: string
+                type: object
+          description: Healthy
+      summary: Health check
+      tags:
+      - system

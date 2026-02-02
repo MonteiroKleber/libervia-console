@@ -1,0 +1,72 @@
+{
+  "audit_trail": [
+    {
+      "details": {
+        "bundle_name": "personal-ops",
+        "contract_count": 10
+      },
+      "event": "bundle_compiled",
+      "timestamp": "2026-02-02T16:49:12.862131+00:00"
+    }
+  ],
+  "bundle_name": "personal-ops",
+  "bundle_version": "idl.v1.2.2",
+  "contracts": [
+    {
+      "content_hash": "b17a4c5ea1851f9210faaa69391d48001453f1ae6523680e6e011dd17492b24e",
+      "contract_name": "approvals.json",
+      "status": "active"
+    },
+    {
+      "content_hash": "19b473fee8fd90894bce0c4984dd708a19976e4a9e372c2b9fb8e73fc4dcc281",
+      "contract_name": "autonomy.json",
+      "status": "active"
+    },
+    {
+      "content_hash": "f6fb681d3e883b744ef1fdee7ed644200f609c0b32663d0737197ffe95f46f63",
+      "contract_name": "invariants.json",
+      "status": "active"
+    },
+    {
+      "content_hash": "7085e481f47eb505b8d723c0d7e44defa7389c53763d0de65ad15d0ccecc033d",
+      "contract_name": "mandates.json",
+      "status": "active"
+    },
+    {
+      "content_hash": "c169aa76e1ed32627ce36681eb2f365c70c23f9c3eb0a5cf63ff71866e43ab6d",
+      "contract_name": "openapi.yaml",
+      "status": "active"
+    },
+    {
+      "content_hash": "c09d2eeddf88deb769d92142f6c3ba4900f79f3d8a2bf9646dd81a998ceade65",
+      "contract_name": "operations.json",
+      "status": "active"
+    },
+    {
+      "content_hash": "d6c07203f38893484deae5e433ad25e5d880ef478460a957fbe810b6ea402654",
+      "contract_name": "policies.json",
+      "status": "active"
+    },
+    {
+      "content_hash": "99df6cda023e2aaac5ea41e50c40edaebaa20e43716b840140004089f92223bd",
+      "contract_name": "rbac.json",
+      "status": "active"
+    },
+    {
+      "content_hash": "7861a3f90c8bfb0e0d1acd96de0ba7da05e4cf47293d5be107f3ea1458652a1d",
+      "contract_name": "sod.json",
+      "status": "active"
+    },
+    {
+      "content_hash": "9aa455cb3f702fa975967031ffbb0288dd0c845d378c1649c1e6d95559b03e1a",
+      "contract_name": "workflows.json",
+      "status": "active"
+    }
+  ],
+  "created_at": "2026-02-02T16:49:12.862106+00:00",
+  "idl_hash": "ec66957c2aaea7e001c96fb835ac1f778dc47a43478d1b1253ca9e9c24b4e082",
+  "ledger_id": "43772f6751854647",
+  "ledger_version": "1.0",
+  "manifest_hash": "fc51104a9e0cb82be1839137ffe6446b7f69f2bea17a0c7c08053778cc75208e",
+  "source_idl_sha256": "ccc9c86ebc0450a4107b2e336a45d03024ca9565a9beb5011ef633b49cb5dde1"
+}
