@@ -1,4 +1,4 @@
-// Personal Ops - IDL DSL v1.2.2
+// Personal Ops - IDL DSL v1.2.3
 // Governanca de operacoes pessoais de arquivos com approvals para acoes destrutivas.
 // Jobs-First: todas operacoes via job.request/job.get/job.enqueue.
 
@@ -77,6 +77,33 @@ policy_context {
   field jurisdiction: string required
   field risk_level: string default("low")
   field file_sensitivity: string default("normal")
+}
+
+// =============================================================================
+// APPROVAL RULES - Acoes destrutivas requerem approval
+// =============================================================================
+
+approval_rules {
+  // Delete de arquivos requer approval de inst_owner ou exec_admin
+  rule job_files_delete_requires_approval {
+    trigger: api "POST /personal/jobs/files/delete"
+    approver_roles: [inst_owner, exec_admin]
+    quorum: 1
+  }
+
+  // Rename de arquivos requer approval de inst_owner ou exec_admin
+  rule job_files_rename_requires_approval {
+    trigger: api "POST /personal/jobs/files/rename"
+    approver_roles: [inst_owner, exec_admin]
+    quorum: 1
+  }
+
+  // Move de arquivos requer approval de inst_owner ou exec_admin
+  rule job_files_move_requires_approval {
+    trigger: api "POST /personal/jobs/files/move"
+    approver_roles: [inst_owner, exec_admin]
+    quorum: 1
+  }
 }
 
 // =============================================================================

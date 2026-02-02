@@ -1,7 +1,7 @@
 {
   "_metadata": {
-    "bundle_hash": "d0a9d139aa8f9af206f3875d9538afb89365d91f54340d8933d56af7035548fd",
-    "created_at": "2026-02-02T17:14:07.660138+00:00",
+    "bundle_hash": "9231725a7aceba71abcd646828e48400cdbf67df73f5e88b8048fe28d14843b3",
+    "created_at": "2026-02-02T18:00:35.516731+00:00",
     "manifest_version": "1.0",
     "mode": "single",
     "system_name": "Personal Ops"
@@ -10,7 +10,7 @@
     {
       "file": "approvals.json",
       "required": true,
-      "sha256": "SHA256:b17a4c5ea1851f9210faaa69391d48001453f1ae6523680e6e011dd17492b24e"
+      "sha256": "SHA256:d27ae053d91174b865a1f6d61d6f9c6964187d58dc06d97a58c3da4d1c0bb21a"
     },
     {
       "file": "autonomy.json",

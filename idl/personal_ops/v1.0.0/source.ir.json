@@ -52,6 +52,41 @@
       ]
     }
   ],
+  "approval_rules": [
+    {
+      "approver_roles": [
+        "inst_owner",
+        "exec_admin"
+      ],
+      "name": "job_files_delete_requires_approval",
+      "quorum": 1,
+      "trigger": {
+        "api": "POST /personal/jobs/files/delete"
+      }
+    },
+    {
+      "approver_roles": [
+        "inst_owner",
+        "exec_admin"
+      ],
+      "name": "job_files_rename_requires_approval",
+      "quorum": 1,
+      "trigger": {
+        "api": "POST /personal/jobs/files/rename"
+      }
+    },
+    {
+      "approver_roles": [
+        "inst_owner",
+        "exec_admin"
+      ],
+      "name": "job_files_move_requires_approval",
+      "quorum": 1,
+      "trigger": {
+        "api": "POST /personal/jobs/files/move"
+      }
+    }
+  ],
   "department": {
     "dept_id": "personal_ops",
     "entrypoints": {
@@ -310,7 +345,7 @@
     }
   },
   "separation_of_duties": [],
-  "source_idl_sha256": "96885f9be50953928b32b62ca5435cbae8a1a39fc58c1638a770e6efc9467c5a",
+  "source_idl_sha256": "5d86314d848784a475eef7280c8a0b841fb0308222cb05a3f34fd92a9757f8bd",
   "source_idl_version": "idl.v1.2.2",
   "system": {
     "contact": "ops@libervia.xyz",

@@ -1,5 +1,39 @@
 {
   "name": "approvals",
-  "rules": [],
+  "rules": [
+    {
+      "approver_roles": [
+        "exec_admin",
+        "inst_owner"
+      ],
+      "quorum": 1,
+      "rule_name": "job_files_delete_requires_approval",
+      "trigger": {
+        "api": "POST /personal/jobs/files/delete"
+      }
+    },
+    {
+      "approver_roles": [
+        "exec_admin",
+        "inst_owner"
+      ],
+      "quorum": 1,
+      "rule_name": "job_files_move_requires_approval",
+      "trigger": {
+        "api": "POST /personal/jobs/files/move"
+      }
+    },
+    {
+      "approver_roles": [
+        "exec_admin",
+        "inst_owner"
+      ],
+      "quorum": 1,
+      "rule_name": "job_files_rename_requires_approval",
+      "trigger": {
+        "api": "POST /personal/jobs/files/rename"
+      }
+    }
+  ],
   "version": "1.0"
 }
