@@ -50,7 +50,9 @@ fi
 # Check 2: Artifact changes require source.idl change
 # ==============================================================================
 # Artifacts that must only be generated, never edited manually
+# NOTE: source.ir.json is ALSO generated from source.idl
 ARTIFACTS=(
+    "$IDL_DIR/v1.0.0/source.ir.json"
     "$IDL_DIR/operations.json"
     "$IDL_DIR/rbac.json"
     "$IDL_DIR/mandates.json"

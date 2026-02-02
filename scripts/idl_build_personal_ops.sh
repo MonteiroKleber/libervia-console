@@ -45,23 +45,27 @@ fi
 
 # ==============================================================================
 # Step 1: IDL -> IR (source.idl -> source.ir.json)
+# RULE: IDL is the single source of truth. NO FALLBACK to existing IR.
 # ==============================================================================
 log_info "Step 1: Compiling IDL to IR..."
 
 cd "$ENGINE_ROOT"
 
-# Try to compile IDL -> IR
-# If it fails but we have an existing IR, use that (for backwards compat)
-if PYTHONPATH=src python -m engine.idl_dsl "$SOURCE_IDL" -o "$SOURCE_IR" --quiet 2>/dev/null; then
-    log_info "  Generated: $SOURCE_IR"
-elif [ -f "$SOURCE_IR" ]; then
-    log_warn "  IDL compilation failed, using existing IR"
-    log_warn "  (IDL may contain syntax not supported by current parser)"
-else
-    log_error "IDL compilation failed and no existing IR found"
-    log_error "Try running: PYTHONPATH=src python -m engine.idl_dsl $SOURCE_IDL -o $SOURCE_IR"
+# Compile IDL -> IR (MUST succeed, no fallback)
+if ! PYTHONPATH=src python -m engine.idl_dsl "$SOURCE_IDL" -o "$SOURCE_IR" --quiet; then
+    log_error "IDL compilation FAILED"
+    log_error ""
+    log_error "The IDL must compile successfully. Artifacts cannot be generated from stale IR."
+    log_error ""
+    log_error "To debug, run:"
+    log_error "  cd $ENGINE_ROOT"
+    log_error "  PYTHONPATH=src python -m engine.idl_dsl $SOURCE_IDL --validate"
+    log_error ""
+    log_error "If the IDL uses unsupported syntax, update the Engine parser first."
     exit 1
 fi
+
+log_info "  Generated: $SOURCE_IR"
 
 # ==============================================================================
 # Step 2: IR -> Bundle (source.ir.json -> bundle artifacts)

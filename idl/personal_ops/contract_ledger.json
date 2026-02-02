@@ -6,7 +6,7 @@
         "contract_count": 10
       },
       "event": "bundle_compiled",
-      "timestamp": "2026-02-02T16:49:12.862131+00:00"
+      "timestamp": "2026-02-02T17:04:24.134849+00:00"
     }
   ],
   "bundle_name": "personal-ops",
@@ -38,7 +38,7 @@
       "status": "active"
     },
     {
-      "content_hash": "c09d2eeddf88deb769d92142f6c3ba4900f79f3d8a2bf9646dd81a998ceade65",
+      "content_hash": "360507c3a66b7620749e977cf3b15bcfb16b39392a8ff1f48139c5cf2def065e",
       "contract_name": "operations.json",
       "status": "active"
     },
@@ -63,10 +63,10 @@
       "status": "active"
     }
   ],
-  "created_at": "2026-02-02T16:49:12.862106+00:00",
-  "idl_hash": "ec66957c2aaea7e001c96fb835ac1f778dc47a43478d1b1253ca9e9c24b4e082",
-  "ledger_id": "43772f6751854647",
+  "created_at": "2026-02-02T17:04:24.134838+00:00",
+  "idl_hash": "1dd7a8e96e35f7ec6e8976353c2d5277018c8836d98ba7e18063f4cdba8b0166",
+  "ledger_id": "a032c75ebcf257ff",
   "ledger_version": "1.0",
-  "manifest_hash": "fc51104a9e0cb82be1839137ffe6446b7f69f2bea17a0c7c08053778cc75208e",
-  "source_idl_sha256": "ccc9c86ebc0450a4107b2e336a45d03024ca9565a9beb5011ef633b49cb5dde1"
+  "manifest_hash": "15018b4f177a487acaf1b570a85eebd79f6bb5a81888050dc351e48397cf3c7a",
+  "source_idl_sha256": "0a17719074d468ff0f84d4f8986d7326d2978f7a1a53ccf3e707a64ed29ebaa4"
 }

@@ -609,10 +609,15 @@
       },
       {
         "bind": {
-          "kind": "job.request",
-          "job_type": "files.list"
+          "entity": "",
+          "job_type": "files.list",
+          "kind": "job.request"
         },
-        "errors": [400, 401, 403],
+        "errors": [
+          400,
+          401,
+          403
+        ],
         "id": "job_files_list",
         "idempotency": "none",
         "method": "POST",
@@ -625,10 +630,15 @@
       },
       {
         "bind": {
-          "kind": "job.request",
-          "job_type": "files.scan"
+          "entity": "",
+          "job_type": "files.scan",
+          "kind": "job.request"
         },
-        "errors": [400, 401, 403],
+        "errors": [
+          400,
+          401,
+          403
+        ],
         "id": "job_files_scan",
         "idempotency": "none",
         "method": "POST",
@@ -641,10 +651,15 @@
       },
       {
         "bind": {
-          "kind": "job.request",
-          "job_type": "files.suggest"
+          "entity": "",
+          "job_type": "files.suggest",
+          "kind": "job.request"
         },
-        "errors": [400, 401, 403],
+        "errors": [
+          400,
+          401,
+          403
+        ],
         "id": "job_files_suggest",
         "idempotency": "none",
         "method": "POST",
@@ -657,10 +672,15 @@
       },
       {
         "bind": {
-          "kind": "job.request",
-          "job_type": "files.rename"
+          "entity": "",
+          "job_type": "files.rename",
+          "kind": "job.request"
         },
-        "errors": [400, 401, 403],
+        "errors": [
+          400,
+          401,
+          403
+        ],
         "id": "job_files_rename",
         "idempotency": "none",
         "method": "POST",
@@ -673,10 +693,15 @@
       },
       {
         "bind": {
-          "kind": "job.request",
-          "job_type": "files.move"
+          "entity": "",
+          "job_type": "files.move",
+          "kind": "job.request"
         },
-        "errors": [400, 401, 403],
+        "errors": [
+          400,
+          401,
+          403
+        ],
         "id": "job_files_move",
         "idempotency": "none",
         "method": "POST",
@@ -689,10 +714,15 @@
       },
       {
         "bind": {
-          "kind": "job.request",
-          "job_type": "files.delete"
+          "entity": "",
+          "job_type": "files.delete",
+          "kind": "job.request"
         },
-        "errors": [400, 401, 403],
+        "errors": [
+          400,
+          401,
+          403
+        ],
         "id": "job_files_delete",
         "idempotency": "none",
         "method": "POST",
@@ -705,14 +735,22 @@
       },
       {
         "bind": {
+          "entity": "",
           "kind": "job.get"
         },
-        "errors": [400, 401, 403, 404],
+        "errors": [
+          400,
+          401,
+          403,
+          404
+        ],
         "id": "job_get",
         "idempotency": "none",
         "method": "GET",
         "path": "/personal/jobs/{job_id}",
-        "path_params": ["job_id"],
+        "path_params": [
+          "job_id"
+        ],
         "permission": "jobs.get",
         "request_type": "void",
         "response_type": "any",
@@ -720,14 +758,23 @@
       },
       {
         "bind": {
+          "entity": "",
           "kind": "job.enqueue"
         },
-        "errors": [400, 401, 403, 404, 409],
+        "errors": [
+          400,
+          401,
+          403,
+          404,
+          409
+        ],
         "id": "job_enqueue",
         "idempotency": "required",
         "method": "POST",
         "path": "/personal/jobs/{job_id}/enqueue",
-        "path_params": ["job_id"],
+        "path_params": [
+          "job_id"
+        ],
         "permission": "jobs.enqueue",
         "request_type": "void",
         "response_type": "any",
@@ -800,7 +847,7 @@
       "severity": "critical"
     }
   ],
-  "source_idl_sha256": "ccc9c86ebc0450a4107b2e336a45d03024ca9565a9beb5011ef633b49cb5dde1",
+  "source_idl_sha256": "0a17719074d468ff0f84d4f8986d7326d2978f7a1a53ccf3e707a64ed29ebaa4",
   "source_idl_version": "idl.v1.2.2",
   "system": {
     "contact": "ops@libervia.xyz",
