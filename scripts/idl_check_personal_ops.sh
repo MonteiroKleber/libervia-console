@@ -64,6 +64,7 @@ log_pass "Build completed successfully"
 # ==============================================================================
 # Check 3: No uncommitted changes in idl/personal_ops/
 # (If there are changes after build, artifacts were out of sync with IDL)
+# Note: Compiler regenerates timestamps on each build, so we filter those
 # ==============================================================================
 log_info "Checking for uncommitted changes in idl/personal_ops/..."
 
@@ -71,22 +72,41 @@ cd "$CONSOLE_ROOT"
 
 # Check if git repo
 if [ -d ".git" ]; then
-    # Get diff for idl/personal_ops directory
-    DIFF_OUTPUT=$(git diff --name-only "idl/personal_ops/" 2>/dev/null || true)
     UNTRACKED=$(git ls-files --others --exclude-standard "idl/personal_ops/" 2>/dev/null || true)
 
-    if [ -n "$DIFF_OUTPUT" ] || [ -n "$UNTRACKED" ]; then
+    # Get diff content
+    DIFF_RAW=$(git diff "idl/personal_ops/" 2>/dev/null || true)
+
+    # Filter out timestamp/metadata changes that are expected on rebuild
+    # These fields change every build and are not meaningful:
+    # - created_at, timestamp (timestamps)
+    # - ledger_id, manifest_hash, bundle_hash (derived from timestamps)
+    MEANINGFUL_DIFF=$(echo "$DIFF_RAW" | grep "^[+-]" | grep -v "^[+-][+-][+-]" | \
+        grep -v '"created_at"' | \
+        grep -v '"timestamp"' | \
+        grep -v '"ledger_id"' | \
+        grep -v '"manifest_hash"' | \
+        grep -v '"bundle_hash"' || true)
+
+    if [ -n "$MEANINGFUL_DIFF" ] || [ -n "$UNTRACKED" ]; then
         log_error "Uncommitted changes detected after build!"
         log_error "This means artifacts were out of sync with source.idl"
         log_error ""
-        log_error "Changed files:"
-        [ -n "$DIFF_OUTPUT" ] && echo "$DIFF_OUTPUT" | while read -r f; do echo "  M $f"; done
-        [ -n "$UNTRACKED" ] && echo "$UNTRACKED" | while read -r f; do echo "  ? $f"; done
+        if [ -n "$UNTRACKED" ]; then
+            log_error "Untracked files:"
+            echo "$UNTRACKED" | while read -r f; do echo "  ? $f"; done
+        fi
+        if [ -n "$MEANINGFUL_DIFF" ]; then
+            log_error "Changed content (excluding timestamps):"
+            echo "$MEANINGFUL_DIFF" | head -20
+        fi
         log_error ""
         log_error "To fix: commit these changes or regenerate from IDL"
         ERRORS=$((ERRORS + 1))
     else
-        log_pass "No uncommitted changes - bundle is in sync with IDL"
+        # Only timestamp changes, restore files to committed state
+        git checkout "idl/personal_ops/" 2>/dev/null || true
+        log_pass "No meaningful changes - bundle is in sync with IDL"
     fi
 else
     log_warn "Not a git repository, skipping diff check"
