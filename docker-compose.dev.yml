@@ -1,0 +1,156 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-libervia}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-libervia_dev}
+      POSTGRES_DB: ${POSTGRES_DB:-libervia}
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-libervia}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  engine:
+    build:
+      context: ../engine
+      dockerfile: ../libervia-console/Dockerfile.engine
+    ports:
+      - "8001:8000"
+    environment:
+      - ENGINE_API_MODE=both
+      - ENGINE_AUTH_MODE=strict
+      - ENGINE_BUNDLE_PATH=/app/bundles/personal_ops
+      - ENGINE_CORS_ORIGINS=http://localhost:3002,http://localhost:3001
+      - ENGINE_LOG_LEVEL=${ENGINE_LOG_LEVEL:-INFO}
+      - ENGINE_CONSOLE_SESSION_SECRET=${ENGINE_CONSOLE_SESSION_SECRET:-dev_session_secret_32_chars_min!}
+      - ENGINE_ISE_ADMIN_TOKEN=${ENGINE_ISE_ADMIN_TOKEN:-dev_admin_token_32_chars_minimum!}
+      - ENGINE_VERIFY_SCRIPT=/app/ops/checks/verify_bundle.sh
+      - ENGINE_DEPLOY_SCRIPT=/app/ops/scripts/deploy_engine_docker.sh
+      - ENGINE_PROD_BUNDLES_ROOT=/app/var/bundles
+    volumes:
+      - ./idl/personal_ops:/app/bundles/personal_ops:ro
+      - ../engine/var:/app/var
+      - engine_ledger:/app/audit_ledger
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  console-api:
+    build:
+      context: ../libervia-console-api
+    ports:
+      - "3001:8000"
+    environment:
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-libervia}:${POSTGRES_PASSWORD:-libervia_dev}@postgres:5432/${POSTGRES_DB:-libervia}
+      - CORS_ORIGINS=["http://localhost:3002"]
+      - ENGINE_BASE_URL=http://engine:8000
+      - ENGINE_ADMIN_TOKEN=${ENGINE_ISE_ADMIN_TOKEN:-dev_admin_token_32_chars_minimum!}
+      - BUNDLE_IR_PATH=/app/idl/personal_ops/v1.0.0/source.ir.json
+      - ENGINE_DATA_ROOT=/app/engine-var
+      - RUNTIME_MANAGER_KEY=${RUNTIME_MANAGER_KEY:-dev_runtime_manager_key_32chars!}
+      - DEV_AUTO_LOGIN=${DEV_AUTO_LOGIN:-false}
+      - ALLOW_REGISTRATION_IN_DEV=${ALLOW_REGISTRATION_IN_DEV:-true}
+    volumes:
+      - ./idl:/app/idl:ro
+      - ../engine/var:/app/engine-var
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  console:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    ports:
+      - "3002:3000"
+    environment:
+      - NEXT_PUBLIC_CONSOLE_API_BASE_URL=http://localhost:3001
+      - CONSOLE_API_BASE_URL=http://console-api:8000
+      - CONSOLE_REQUIRE_AUTH=${CONSOLE_REQUIRE_AUTH:-true}
+    volumes:
+      - ./src:/app/src:ro
+      - ./public:/app/public:ro
+    depends_on:
+      - console-api
+
+
+  # Single-tenant runtime (requires manual RUNTIME_INSTITUTION_ID config)
+  # Use this for debugging or when you want explicit tenant control
+  runtime:
+    build:
+      context: ../libervia-agent-runtime
+    env_file:
+      - .env.dev
+    environment:
+      - RUNTIME_ENGINE_URL=http://engine:8000
+      - RUNTIME_ROOT_DIR=/data
+    volumes:
+      - /home/bazari:/data:rw
+      - ../engine/var/institutions/${RUNTIME_INSTITUTION_ID}/legacy_bridge:/legacy_bridge:rw
+    depends_on:
+      engine:
+        condition: service_healthy
+    restart: unless-stopped
+    entrypoint: ["python", "-c"]
+    command:
+      - |
+        import os, subprocess
+        env = os.environ
+        subprocess.check_call([
+          "python", "-m", "libervia_agent", "configure",
+          "--api-url", env["RUNTIME_ENGINE_URL"],
+          "--token", env["RUNTIME_AGENT_TOKEN"],
+          "--institution-id", env["RUNTIME_INSTITUTION_ID"],
+          "--root-dir", env.get("RUNTIME_ROOT_DIR", "/data"),
+          "--poll-interval", "5",
+        ])
+        subprocess.check_call([
+          "python", "-m", "libervia_agent", "run",
+          "--outbox-dir", "/legacy_bridge/outbox",
+          "--daemon",
+        ])
+    profiles:
+      - single-tenant
+
+  # Multi-tenant runtime manager (zero config - discovers tenants from Console API)
+  # This is the recommended mode for SaaS deployment
+  runtime-manager:
+    build:
+      context: ../libervia-agent-runtime
+    environment:
+      - CONSOLE_API_URL=http://console-api:8000
+      - RUNTIME_MANAGER_KEY=${RUNTIME_MANAGER_KEY:-dev_runtime_manager_key_32chars!}
+      - ENGINE_DIR=/app/engine
+      - ENGINE_API_URL=http://engine:8000
+      - ROOT_DIR=/data
+      - POLL_INTERVAL=10
+      - TENANT_REFRESH_INTERVAL=30
+    volumes:
+      - /home/bazari:/data:rw
+      - ../engine:/app/engine:rw
+    depends_on:
+      engine:
+        condition: service_healthy
+      console-api:
+        condition: service_healthy
+    restart: unless-stopped
+    command: ["python", "-m", "libervia_agent", "manager"]
+
+volumes:
+  postgres_data:
+  engine_ledger:

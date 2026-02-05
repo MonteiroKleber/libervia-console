@@ -14,6 +14,17 @@
       "workflow_key": "workflow-approval_decide"
     },
     {
+      "name": "job_archive_create",
+      "steps": [
+        {
+          "action": "job.request: post /personal/jobs/archive/create",
+          "actor_ref": "actor-operator",
+          "step_key": "step-000"
+        }
+      ],
+      "workflow_key": "workflow-job_archive_create"
+    },
+    {
       "name": "job_enqueue",
       "steps": [
         {
@@ -34,6 +45,17 @@
         }
       ],
       "workflow_key": "workflow-job_files_delete"
+    },
+    {
+      "name": "job_files_hash",
+      "steps": [
+        {
+          "action": "job.request: post /personal/jobs/files/hash",
+          "actor_ref": "actor-user",
+          "step_key": "step-000"
+        }
+      ],
+      "workflow_key": "workflow-job_files_hash"
     },
     {
       "name": "job_files_list",
@@ -58,6 +80,50 @@
       "workflow_key": "workflow-job_files_move"
     },
     {
+      "name": "job_files_plan_apply",
+      "steps": [
+        {
+          "action": "job.request: post /personal/jobs/files/plan/{plan_id}/apply",
+          "actor_ref": "actor-user",
+          "step_key": "step-000"
+        }
+      ],
+      "workflow_key": "workflow-job_files_plan_apply"
+    },
+    {
+      "name": "job_files_plan_create",
+      "steps": [
+        {
+          "action": "job.request: post /personal/jobs/files/plan/create",
+          "actor_ref": "actor-operator",
+          "step_key": "step-000"
+        }
+      ],
+      "workflow_key": "workflow-job_files_plan_create"
+    },
+    {
+      "name": "job_files_plan_get",
+      "steps": [
+        {
+          "action": "job.request: post /personal/jobs/files/plan/get",
+          "actor_ref": "actor-user",
+          "step_key": "step-000"
+        }
+      ],
+      "workflow_key": "workflow-job_files_plan_get"
+    },
+    {
+      "name": "job_files_read",
+      "steps": [
+        {
+          "action": "job.request: post /personal/jobs/files/read",
+          "actor_ref": "actor-operator",
+          "step_key": "step-000"
+        }
+      ],
+      "workflow_key": "workflow-job_files_read"
+    },
+    {
       "name": "job_files_rename",
       "steps": [
         {
@@ -78,6 +144,28 @@
         }
       ],
       "workflow_key": "workflow-job_files_scan"
+    },
+    {
+      "name": "job_files_search",
+      "steps": [
+        {
+          "action": "job.request: post /personal/jobs/files/search",
+          "actor_ref": "actor-user",
+          "step_key": "step-000"
+        }
+      ],
+      "workflow_key": "workflow-job_files_search"
+    },
+    {
+      "name": "job_files_stat",
+      "steps": [
+        {
+          "action": "job.request: post /personal/jobs/files/stat",
+          "actor_ref": "actor-user",
+          "step_key": "step-000"
+        }
+      ],
+      "workflow_key": "workflow-job_files_stat"
     },
     {
       "name": "job_files_suggest",

@@ -10,9 +10,17 @@
         "files.list",
         "files.scan",
         "files.suggest",
+        "files.read",
+        "files.stat",
+        "files.hash",
+        "files.search",
         "files.rename",
         "files.move",
         "files.delete",
+        "files.plan.create",
+        "files.plan.get",
+        "files.plan.apply",
+        "archive.create",
         "jobs.get",
         "approval.decide"
       ]
@@ -41,9 +49,17 @@
         "files.list",
         "files.scan",
         "files.suggest",
+        "files.read",
+        "files.stat",
+        "files.hash",
+        "files.search",
         "files.rename",
         "files.move",
         "files.delete",
+        "files.plan.create",
+        "files.plan.get",
+        "files.plan.apply",
+        "archive.create",
         "jobs.get",
         "jobs.enqueue",
         "runtime.bundle.load",
@@ -84,6 +100,17 @@
       "quorum": 1,
       "trigger": {
         "api": "POST /personal/jobs/files/move"
+      }
+    },
+    {
+      "approver_roles": [
+        "inst_owner",
+        "exec_admin"
+      ],
+      "name": "job_files_plan_apply_requires_approval",
+      "quorum": 1,
+      "trigger": {
+        "api": "POST /personal/jobs/files/plan/{plan_id}/apply"
       }
     }
   ],
@@ -162,6 +189,179 @@
         "path": "/personal/jobs/files/suggest",
         "path_params": [],
         "permission": "files.suggest",
+        "request_type": "any",
+        "response_type": "any",
+        "scope": "tenant"
+      },
+      {
+        "bind": {
+          "entity": "",
+          "job_type": "files.read",
+          "kind": "job.request"
+        },
+        "errors": [
+          400,
+          401,
+          403
+        ],
+        "id": "job_files_read",
+        "idempotency": "none",
+        "method": "POST",
+        "path": "/personal/jobs/files/read",
+        "path_params": [],
+        "permission": "files.read",
+        "request_type": "any",
+        "response_type": "any",
+        "scope": "tenant"
+      },
+      {
+        "bind": {
+          "entity": "",
+          "job_type": "files.stat",
+          "kind": "job.request"
+        },
+        "errors": [
+          400,
+          401,
+          403
+        ],
+        "id": "job_files_stat",
+        "idempotency": "none",
+        "method": "POST",
+        "path": "/personal/jobs/files/stat",
+        "path_params": [],
+        "permission": "files.stat",
+        "request_type": "any",
+        "response_type": "any",
+        "scope": "tenant"
+      },
+      {
+        "bind": {
+          "entity": "",
+          "job_type": "files.hash",
+          "kind": "job.request"
+        },
+        "errors": [
+          400,
+          401,
+          403
+        ],
+        "id": "job_files_hash",
+        "idempotency": "none",
+        "method": "POST",
+        "path": "/personal/jobs/files/hash",
+        "path_params": [],
+        "permission": "files.hash",
+        "request_type": "any",
+        "response_type": "any",
+        "scope": "tenant"
+      },
+      {
+        "bind": {
+          "entity": "",
+          "job_type": "files.search",
+          "kind": "job.request"
+        },
+        "errors": [
+          400,
+          401,
+          403
+        ],
+        "id": "job_files_search",
+        "idempotency": "none",
+        "method": "POST",
+        "path": "/personal/jobs/files/search",
+        "path_params": [],
+        "permission": "files.search",
+        "request_type": "any",
+        "response_type": "any",
+        "scope": "tenant"
+      },
+      {
+        "bind": {
+          "entity": "",
+          "job_type": "files.plan.create",
+          "kind": "job.request"
+        },
+        "errors": [
+          400,
+          401,
+          403
+        ],
+        "id": "job_files_plan_create",
+        "idempotency": "none",
+        "method": "POST",
+        "path": "/personal/jobs/files/plan/create",
+        "path_params": [],
+        "permission": "files.plan.create",
+        "request_type": "any",
+        "response_type": "any",
+        "scope": "tenant"
+      },
+      {
+        "bind": {
+          "entity": "",
+          "job_type": "files.plan.get",
+          "kind": "job.request"
+        },
+        "errors": [
+          400,
+          401,
+          403,
+          404
+        ],
+        "id": "job_files_plan_get",
+        "idempotency": "none",
+        "method": "POST",
+        "path": "/personal/jobs/files/plan/get",
+        "path_params": [],
+        "permission": "files.plan.get",
+        "request_type": "any",
+        "response_type": "any",
+        "scope": "tenant"
+      },
+      {
+        "bind": {
+          "entity": "",
+          "job_type": "files.plan.apply",
+          "kind": "job.request"
+        },
+        "errors": [
+          400,
+          401,
+          403,
+          404,
+          409
+        ],
+        "id": "job_files_plan_apply",
+        "idempotency": "required",
+        "method": "POST",
+        "path": "/personal/jobs/files/plan/{plan_id}/apply",
+        "path_params": [
+          "plan_id"
+        ],
+        "permission": "files.plan.apply",
+        "request_type": "any",
+        "response_type": "any",
+        "scope": "tenant"
+      },
+      {
+        "bind": {
+          "entity": "",
+          "job_type": "archive.create",
+          "kind": "job.request"
+        },
+        "errors": [
+          400,
+          401,
+          403
+        ],
+        "id": "job_archive_create",
+        "idempotency": "none",
+        "method": "POST",
+        "path": "/personal/jobs/archive/create",
+        "path_params": [],
+        "permission": "archive.create",
         "request_type": "any",
         "response_type": "any",
         "scope": "tenant"
@@ -359,9 +559,14 @@
       "case_step": "APPROVAL:job_files_move_requires_approval",
       "constraint": "REQUESTER_NEQ_DECIDER",
       "name": "no_self_approval_job_files_move"
+    },
+    {
+      "case_step": "APPROVAL:job_files_plan_apply_requires_approval",
+      "constraint": "REQUESTER_NEQ_DECIDER",
+      "name": "no_self_approval_job_files_plan_apply"
     }
   ],
-  "source_idl_sha256": "0fb2634fc7b6daed3170a344e7e042208359777d78c3aa019ebebaa7d233cbe3",
+  "source_idl_sha256": "cefe472044e0eeff1c7254581bbc298032fe6e507b707605dea326979b711a78",
   "source_idl_version": "idl.v1.2.2",
   "system": {
     "contact": "ops@libervia.xyz",

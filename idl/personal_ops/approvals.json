@@ -29,6 +29,17 @@
         "inst_owner"
       ],
       "quorum": 1,
+      "rule_name": "job_files_plan_apply_requires_approval",
+      "trigger": {
+        "api": "POST /personal/jobs/files/plan/{plan_id}/apply"
+      }
+    },
+    {
+      "approver_roles": [
+        "exec_admin",
+        "inst_owner"
+      ],
+      "quorum": 1,
       "rule_name": "job_files_rename_requires_approval",
       "trigger": {
         "api": "POST /personal/jobs/files/rename"

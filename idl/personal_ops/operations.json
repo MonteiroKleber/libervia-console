@@ -42,6 +42,25 @@
     {
       "bind": {
         "entity": "",
+        "job_type": "archive.create",
+        "kind": "job.request"
+      },
+      "endpoint_sig": "POST /personal/jobs/archive/create",
+      "errors": [
+        400,
+        401,
+        403
+      ],
+      "idempotency": "none",
+      "method": "POST",
+      "operation_id": "job_archive_create",
+      "path": "/personal/jobs/archive/create",
+      "permission": "archive.create",
+      "scope": "tenant"
+    },
+    {
+      "bind": {
+        "entity": "",
         "job_type": "files.delete",
         "kind": "job.request"
       },
@@ -56,6 +75,25 @@
       "operation_id": "job_files_delete",
       "path": "/personal/jobs/files/delete",
       "permission": "files.delete",
+      "scope": "tenant"
+    },
+    {
+      "bind": {
+        "entity": "",
+        "job_type": "files.hash",
+        "kind": "job.request"
+      },
+      "endpoint_sig": "POST /personal/jobs/files/hash",
+      "errors": [
+        400,
+        401,
+        403
+      ],
+      "idempotency": "none",
+      "method": "POST",
+      "operation_id": "job_files_hash",
+      "path": "/personal/jobs/files/hash",
+      "permission": "files.hash",
       "scope": "tenant"
     },
     {
@@ -99,6 +137,85 @@
     {
       "bind": {
         "entity": "",
+        "job_type": "files.plan.create",
+        "kind": "job.request"
+      },
+      "endpoint_sig": "POST /personal/jobs/files/plan/create",
+      "errors": [
+        400,
+        401,
+        403
+      ],
+      "idempotency": "none",
+      "method": "POST",
+      "operation_id": "job_files_plan_create",
+      "path": "/personal/jobs/files/plan/create",
+      "permission": "files.plan.create",
+      "scope": "tenant"
+    },
+    {
+      "bind": {
+        "entity": "",
+        "job_type": "files.plan.get",
+        "kind": "job.request"
+      },
+      "endpoint_sig": "POST /personal/jobs/files/plan/get",
+      "errors": [
+        400,
+        401,
+        403,
+        404
+      ],
+      "idempotency": "none",
+      "method": "POST",
+      "operation_id": "job_files_plan_get",
+      "path": "/personal/jobs/files/plan/get",
+      "permission": "files.plan.get",
+      "scope": "tenant"
+    },
+    {
+      "bind": {
+        "entity": "",
+        "job_type": "files.plan.apply",
+        "kind": "job.request"
+      },
+      "endpoint_sig": "POST /personal/jobs/files/plan/{plan_id}/apply",
+      "errors": [
+        400,
+        401,
+        403,
+        404,
+        409
+      ],
+      "idempotency": "required",
+      "method": "POST",
+      "operation_id": "job_files_plan_apply",
+      "path": "/personal/jobs/files/plan/{plan_id}/apply",
+      "permission": "files.plan.apply",
+      "scope": "tenant"
+    },
+    {
+      "bind": {
+        "entity": "",
+        "job_type": "files.read",
+        "kind": "job.request"
+      },
+      "endpoint_sig": "POST /personal/jobs/files/read",
+      "errors": [
+        400,
+        401,
+        403
+      ],
+      "idempotency": "none",
+      "method": "POST",
+      "operation_id": "job_files_read",
+      "path": "/personal/jobs/files/read",
+      "permission": "files.read",
+      "scope": "tenant"
+    },
+    {
+      "bind": {
+        "entity": "",
         "job_type": "files.rename",
         "kind": "job.request"
       },
@@ -132,6 +249,44 @@
       "operation_id": "job_files_scan",
       "path": "/personal/jobs/files/scan",
       "permission": "files.scan",
+      "scope": "tenant"
+    },
+    {
+      "bind": {
+        "entity": "",
+        "job_type": "files.search",
+        "kind": "job.request"
+      },
+      "endpoint_sig": "POST /personal/jobs/files/search",
+      "errors": [
+        400,
+        401,
+        403
+      ],
+      "idempotency": "none",
+      "method": "POST",
+      "operation_id": "job_files_search",
+      "path": "/personal/jobs/files/search",
+      "permission": "files.search",
+      "scope": "tenant"
+    },
+    {
+      "bind": {
+        "entity": "",
+        "job_type": "files.stat",
+        "kind": "job.request"
+      },
+      "endpoint_sig": "POST /personal/jobs/files/stat",
+      "errors": [
+        400,
+        401,
+        403
+      ],
+      "idempotency": "none",
+      "method": "POST",
+      "operation_id": "job_files_stat",
+      "path": "/personal/jobs/files/stat",
+      "permission": "files.stat",
       "scope": "tenant"
     },
     {

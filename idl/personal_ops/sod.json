@@ -12,6 +12,11 @@
       "rule_name": "no_self_approval_job_files_move"
     },
     {
+      "case_step": "APPROVAL:job_files_plan_apply_requires_approval",
+      "constraint": "REQUESTER_NEQ_DECIDER",
+      "rule_name": "no_self_approval_job_files_plan_apply"
+    },
+    {
       "case_step": "APPROVAL:job_files_rename_requires_approval",
       "constraint": "REQUESTER_NEQ_DECIDER",
       "rule_name": "no_self_approval_job_files_rename"

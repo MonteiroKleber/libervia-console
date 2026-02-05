@@ -21,6 +21,54 @@
       "rule_id": "job_files_suggest:pre"
     },
     {
+      "endpoint_sig": "POST /personal/jobs/files/read",
+      "phase": "pre",
+      "required_level": 0,
+      "rule_id": "job_files_read:pre"
+    },
+    {
+      "endpoint_sig": "POST /personal/jobs/files/stat",
+      "phase": "pre",
+      "required_level": 0,
+      "rule_id": "job_files_stat:pre"
+    },
+    {
+      "endpoint_sig": "POST /personal/jobs/files/hash",
+      "phase": "pre",
+      "required_level": 0,
+      "rule_id": "job_files_hash:pre"
+    },
+    {
+      "endpoint_sig": "POST /personal/jobs/files/search",
+      "phase": "pre",
+      "required_level": 0,
+      "rule_id": "job_files_search:pre"
+    },
+    {
+      "endpoint_sig": "POST /personal/jobs/files/plan/create",
+      "phase": "pre",
+      "required_level": 0,
+      "rule_id": "job_files_plan_create:pre"
+    },
+    {
+      "endpoint_sig": "POST /personal/jobs/files/plan/get",
+      "phase": "pre",
+      "required_level": 0,
+      "rule_id": "job_files_plan_get:pre"
+    },
+    {
+      "endpoint_sig": "POST /personal/jobs/files/plan/{plan_id}/apply",
+      "phase": "pre",
+      "required_level": 0,
+      "rule_id": "job_files_plan_apply:pre"
+    },
+    {
+      "endpoint_sig": "POST /personal/jobs/archive/create",
+      "phase": "pre",
+      "required_level": 0,
+      "rule_id": "job_archive_create:pre"
+    },
+    {
       "endpoint_sig": "POST /personal/jobs/files/rename",
       "phase": "pre",
       "required_level": 0,

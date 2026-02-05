@@ -1,4 +1,4 @@
-// Personal Ops - IDL DSL v1.2.4
+// Personal Ops - IDL DSL v1.2.5
 // Governanca de operacoes pessoais de arquivos com approvals para acoes destrutivas.
 // Jobs-First: todas operacoes via job.request/job.get/job.enqueue.
 
@@ -26,9 +26,17 @@ actors {
       files.list,
       files.scan,
       files.suggest,
+      files.read,
+      files.stat,
+      files.hash,
+      files.search,
       files.rename,
       files.move,
       files.delete,
+      files.plan.create,
+      files.plan.get,
+      files.plan.apply,
+      archive.create,
       jobs.get,
       approval.decide
     ]
@@ -57,9 +65,17 @@ actors {
       files.list,
       files.scan,
       files.suggest,
+      files.read,
+      files.stat,
+      files.hash,
+      files.search,
       files.rename,
       files.move,
       files.delete,
+      files.plan.create,
+      files.plan.get,
+      files.plan.apply,
+      archive.create,
       jobs.get,
       jobs.enqueue,
       runtime.bundle.load,
@@ -104,6 +120,13 @@ approval_rules {
     approver_roles: [inst_owner, exec_admin]
     quorum: 1
   }
+
+  // Plan apply (operacoes em lote) requer approval de inst_owner ou exec_admin
+  rule job_files_plan_apply_requires_approval {
+    trigger: api "POST /personal/jobs/files/plan/{plan_id}/apply"
+    approver_roles: [inst_owner, exec_admin]
+    quorum: 1
+  }
 }
 
 // =============================================================================
@@ -126,6 +149,12 @@ separation_of_duties {
   // SoD para move: quem solicitou NAO pode aprovar
   rule no_self_approval_job_files_move {
     case_step: "APPROVAL:job_files_move_requires_approval"
+    constraint: REQUESTER_NEQ_DECIDER
+  }
+
+  // SoD para plan.apply: quem solicitou NAO pode aprovar
+  rule no_self_approval_job_files_plan_apply {
+    case_step: "APPROVAL:job_files_plan_apply_requires_approval"
     constraint: REQUESTER_NEQ_DECIDER
   }
 }
@@ -174,6 +203,113 @@ operations {
       idempotency: none
       errors: [400, 401, 403]
       bind: { kind: job.request, job_type: "files.suggest" }
+    }
+
+    endpoint job_files_read {
+      method: POST
+      path: "/personal/jobs/files/read"
+      request: any
+      response: any
+      permission: files.read
+      scope: tenant
+      idempotency: none
+      errors: [400, 401, 403]
+      bind: { kind: job.request, job_type: "files.read" }
+    }
+
+    endpoint job_files_stat {
+      method: POST
+      path: "/personal/jobs/files/stat"
+      request: any
+      response: any
+      permission: files.stat
+      scope: tenant
+      idempotency: none
+      errors: [400, 401, 403]
+      bind: { kind: job.request, job_type: "files.stat" }
+    }
+
+    endpoint job_files_hash {
+      method: POST
+      path: "/personal/jobs/files/hash"
+      request: any
+      response: any
+      permission: files.hash
+      scope: tenant
+      idempotency: none
+      errors: [400, 401, 403]
+      bind: { kind: job.request, job_type: "files.hash" }
+    }
+
+    endpoint job_files_search {
+      method: POST
+      path: "/personal/jobs/files/search"
+      request: any
+      response: any
+      permission: files.search
+      scope: tenant
+      idempotency: none
+      errors: [400, 401, 403]
+      bind: { kind: job.request, job_type: "files.search" }
+    }
+
+    // =========================================================================
+    // PLAN JOBS - Operacoes em lote com preview
+    // plan.create e plan.get sao safe, plan.apply requer approval
+    // =========================================================================
+
+    endpoint job_files_plan_create {
+      method: POST
+      path: "/personal/jobs/files/plan/create"
+      request: any
+      response: any
+      permission: files.plan.create
+      scope: tenant
+      idempotency: none
+      errors: [400, 401, 403]
+      bind: { kind: job.request, job_type: "files.plan.create" }
+    }
+
+    endpoint job_files_plan_get {
+      method: POST
+      path: "/personal/jobs/files/plan/get"
+      request: any
+      response: any
+      permission: files.plan.get
+      scope: tenant
+      idempotency: none
+      errors: [400, 401, 403, 404]
+      bind: { kind: job.request, job_type: "files.plan.get" }
+    }
+
+    endpoint job_files_plan_apply {
+      method: POST
+      path: "/personal/jobs/files/plan/{plan_id}/apply"
+      request: any
+      response: any
+      permission: files.plan.apply
+      scope: tenant
+      idempotency: required
+      errors: [400, 401, 403, 404, 409]
+      bind: { kind: job.request, job_type: "files.plan.apply" }
+    }
+
+
+
+    // =========================================================================
+    // LOCAL INTEGRATIONS (safe)
+    // =========================================================================
+
+    endpoint job_archive_create {
+      method: POST
+      path: "/personal/jobs/archive/create"
+      request: any
+      response: any
+      permission: archive.create
+      scope: tenant
+      idempotency: none
+      errors: [400, 401, 403]
+      bind: { kind: job.request, job_type: "archive.create" }
     }
 
     // =========================================================================

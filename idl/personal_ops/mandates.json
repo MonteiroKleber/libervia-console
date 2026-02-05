@@ -36,6 +36,78 @@
         "inst_owner",
         "runtime_agent"
       ],
+      "endpoint_sig": "POST /personal/jobs/files/read",
+      "mandate_id": "job_files_read:pre",
+      "phase": "pre"
+    },
+    {
+      "allowed_roles": [
+        "inst_owner",
+        "runtime_agent"
+      ],
+      "endpoint_sig": "POST /personal/jobs/files/stat",
+      "mandate_id": "job_files_stat:pre",
+      "phase": "pre"
+    },
+    {
+      "allowed_roles": [
+        "inst_owner",
+        "runtime_agent"
+      ],
+      "endpoint_sig": "POST /personal/jobs/files/hash",
+      "mandate_id": "job_files_hash:pre",
+      "phase": "pre"
+    },
+    {
+      "allowed_roles": [
+        "inst_owner",
+        "runtime_agent"
+      ],
+      "endpoint_sig": "POST /personal/jobs/files/search",
+      "mandate_id": "job_files_search:pre",
+      "phase": "pre"
+    },
+    {
+      "allowed_roles": [
+        "inst_owner",
+        "runtime_agent"
+      ],
+      "endpoint_sig": "POST /personal/jobs/files/plan/create",
+      "mandate_id": "job_files_plan_create:pre",
+      "phase": "pre"
+    },
+    {
+      "allowed_roles": [
+        "inst_owner",
+        "runtime_agent"
+      ],
+      "endpoint_sig": "POST /personal/jobs/files/plan/get",
+      "mandate_id": "job_files_plan_get:pre",
+      "phase": "pre"
+    },
+    {
+      "allowed_roles": [
+        "inst_owner",
+        "runtime_agent"
+      ],
+      "endpoint_sig": "POST /personal/jobs/files/plan/{plan_id}/apply",
+      "mandate_id": "job_files_plan_apply:pre",
+      "phase": "pre"
+    },
+    {
+      "allowed_roles": [
+        "inst_owner",
+        "runtime_agent"
+      ],
+      "endpoint_sig": "POST /personal/jobs/archive/create",
+      "mandate_id": "job_archive_create:pre",
+      "phase": "pre"
+    },
+    {
+      "allowed_roles": [
+        "inst_owner",
+        "runtime_agent"
+      ],
       "endpoint_sig": "POST /personal/jobs/files/rename",
       "mandate_id": "job_files_rename:pre",
       "phase": "pre"

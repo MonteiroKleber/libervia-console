@@ -1,7 +1,7 @@
 {
   "_metadata": {
-    "bundle_hash": "e0fff504ec06da16fff4370a2404b3dce6c2445424f38ed6411353c1d4d4e91b",
-    "created_at": "2026-02-02T19:16:01.720738+00:00",
+    "bundle_hash": "c292508b064c6248b223090cd979793ffda6ebae561d2f8f9b4fe68c0ab10921",
+    "created_at": "2026-02-04T19:35:45.514525+00:00",
     "manifest_version": "1.0",
     "mode": "single",
     "system_name": "Personal Ops"
@@ -10,12 +10,12 @@
     {
       "file": "approvals.json",
       "required": true,
-      "sha256": "SHA256:d27ae053d91174b865a1f6d61d6f9c6964187d58dc06d97a58c3da4d1c0bb21a"
+      "sha256": "SHA256:bcf255790bd63bf45e726f549fd1bb52528995bcb4af2516c2a54d87d3956d42"
     },
     {
       "file": "autonomy.json",
       "required": true,
-      "sha256": "SHA256:ee0c58b995c70c2d6605f0d48791bfd1367e14060ab76c500965746cdf15c5e5"
+      "sha256": "SHA256:80abe815f32c2dff20088177d9bb7d7742018ed89f05dd1af6ed5a830d7a5928"
     },
     {
       "file": "invariants.json",
@@ -25,7 +25,7 @@
     {
       "file": "mandates.json",
       "required": true,
-      "sha256": "SHA256:380cd9e62d0503f5e607b64c3db444abd4d7145a5e87d7ff3933557533a0de37"
+      "sha256": "SHA256:686fef471ab3912e91609e520f36241e3054a36ab068fbff9254049cc3358a65"
     },
     {
       "file": "openapi.yaml",
@@ -35,7 +35,7 @@
     {
       "file": "operations.json",
       "required": false,
-      "sha256": "SHA256:34312299d51c7978b2beef6d73130b6fc061e73e29164c3c71ee141786b7fe7d"
+      "sha256": "SHA256:32ff1414ab092fc7715c2170948163327da0d66b55c6b2fe9a150967f2ade104"
     },
     {
       "file": "policies.json",
@@ -45,17 +45,17 @@
     {
       "file": "rbac.json",
       "required": true,
-      "sha256": "SHA256:0d4ab5730976cc70f42d7c011704b7766c753e66b7def004436cebe886a39d1a"
+      "sha256": "SHA256:40344af3f4e941724e50bb15a1ca8a294b5d886d6fe392e061b96237118b9da4"
     },
     {
       "file": "sod.json",
       "required": true,
-      "sha256": "SHA256:4b81f8d23293bfd3131bb292140abb2ad3ad76a54637899e8f3b25ab005ccf45"
+      "sha256": "SHA256:bf000a2fdd373b30ab220376d42f84b4a237479b7282f418dde3579615cb0da0"
     },
     {
       "file": "workflows.json",
       "required": true,
-      "sha256": "SHA256:935a6115953e01fab1f9792168d281d054932f91485f55dcf133a86cf03b93d6"
+      "sha256": "SHA256:8718d5b4fa30f3c178772ae71c253c3eb6b46516416ea8c6eb5c7285fa38cc4a"
     }
   ],
   "description": "Personal Ops bundle",

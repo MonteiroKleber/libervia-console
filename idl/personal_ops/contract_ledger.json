@@ -6,19 +6,19 @@
         "contract_count": 10
       },
       "event": "bundle_compiled",
-      "timestamp": "2026-02-02T19:16:01.721322+00:00"
+      "timestamp": "2026-02-04T19:35:45.514843+00:00"
     }
   ],
   "bundle_name": "personal-ops",
   "bundle_version": "idl.v1.2.2",
   "contracts": [
     {
-      "content_hash": "d27ae053d91174b865a1f6d61d6f9c6964187d58dc06d97a58c3da4d1c0bb21a",
+      "content_hash": "bcf255790bd63bf45e726f549fd1bb52528995bcb4af2516c2a54d87d3956d42",
       "contract_name": "approvals.json",
       "status": "active"
     },
     {
-      "content_hash": "ee0c58b995c70c2d6605f0d48791bfd1367e14060ab76c500965746cdf15c5e5",
+      "content_hash": "80abe815f32c2dff20088177d9bb7d7742018ed89f05dd1af6ed5a830d7a5928",
       "contract_name": "autonomy.json",
       "status": "active"
     },
@@ -28,7 +28,7 @@
       "status": "active"
     },
     {
-      "content_hash": "380cd9e62d0503f5e607b64c3db444abd4d7145a5e87d7ff3933557533a0de37",
+      "content_hash": "686fef471ab3912e91609e520f36241e3054a36ab068fbff9254049cc3358a65",
       "contract_name": "mandates.json",
       "status": "active"
     },
@@ -38,7 +38,7 @@
       "status": "active"
     },
     {
-      "content_hash": "34312299d51c7978b2beef6d73130b6fc061e73e29164c3c71ee141786b7fe7d",
+      "content_hash": "32ff1414ab092fc7715c2170948163327da0d66b55c6b2fe9a150967f2ade104",
       "contract_name": "operations.json",
       "status": "active"
     },
@@ -48,25 +48,25 @@
       "status": "active"
     },
     {
-      "content_hash": "0d4ab5730976cc70f42d7c011704b7766c753e66b7def004436cebe886a39d1a",
+      "content_hash": "40344af3f4e941724e50bb15a1ca8a294b5d886d6fe392e061b96237118b9da4",
       "contract_name": "rbac.json",
       "status": "active"
     },
     {
-      "content_hash": "4b81f8d23293bfd3131bb292140abb2ad3ad76a54637899e8f3b25ab005ccf45",
+      "content_hash": "bf000a2fdd373b30ab220376d42f84b4a237479b7282f418dde3579615cb0da0",
       "contract_name": "sod.json",
       "status": "active"
     },
     {
-      "content_hash": "935a6115953e01fab1f9792168d281d054932f91485f55dcf133a86cf03b93d6",
+      "content_hash": "8718d5b4fa30f3c178772ae71c253c3eb6b46516416ea8c6eb5c7285fa38cc4a",
       "contract_name": "workflows.json",
       "status": "active"
     }
   ],
-  "created_at": "2026-02-02T19:16:01.721306+00:00",
-  "idl_hash": "021a01b14f93a9c6022b7605b3e6b591f31fc8f09b732d75adbabc141df3a332",
-  "ledger_id": "46f709064dc56974",
+  "created_at": "2026-02-04T19:35:45.514841+00:00",
+  "idl_hash": "bc8b5a1415e3c4731e546f6b836594631d25999b0d387758d1ac8f23f4bcf087",
+  "ledger_id": "d45be9d227a93136",
   "ledger_version": "1.0",
-  "manifest_hash": "c2715b4ac2ac0c355d6014cd3ca7b89d3ea2a685af327ec7ba44a639e29baca8",
-  "source_idl_sha256": "0fb2634fc7b6daed3170a344e7e042208359777d78c3aa019ebebaa7d233cbe3"
+  "manifest_hash": "567232d00be08a24b3ae9ff32a6e8b1f539a432dd56a96d060be1398e549f6f3",
+  "source_idl_sha256": "cefe472044e0eeff1c7254581bbc298032fe6e507b707605dea326979b711a78"
 }

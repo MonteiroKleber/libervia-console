@@ -1,0 +1,21 @@
+FROM python:3.11-slim
+
+WORKDIR /app
+
+RUN apt-get update && apt-get install -y --no-install-recommends curl && rm -rf /var/lib/apt/lists/*
+
+COPY pyproject.toml .
+COPY src/ src/
+COPY ops/ ops/
+
+RUN pip install --no-cache-dir . itsdangerous jinja2 python-multipart
+
+# Create bundles directory for volume mounts
+RUN mkdir -p /app/bundles/personal_ops /app/var /app/var/bundles
+
+ENV PYTHONPATH=/app/src
+ENV ENGINE_BUNDLE_PATH=/app/bundles/multi-pilot
+
+EXPOSE 8000
+
+CMD ["uvicorn", "engine.api.server:app", "--host", "0.0.0.0", "--port", "8000"]
